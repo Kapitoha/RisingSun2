@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - risingsun@localhost" uuid="4ce14549-7404-43ac-bd64-22910b8403e1">
+    <database-info product="MySQL" version="5.6.22-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="risingsun"/>
+    <table name="accesstable" schema="" catalog="risingsun" type="TABLE">
+      <column name="ID" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="ID_Rules" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="ID_Table" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="Rule" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="ID"/>
+      <foreign-key name="AccessTable_Rules" columns="ID_Rules" ref-table="rules" ref-schema="" ref-catalog="risingsun" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="AccessTable_TableName" columns="ID_Table" ref-table="tablename" ref-schema="" ref-catalog="risingsun" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="AccessTable_Rules" unique="false" columns="ID_Rules"/>
+      <index name="AccessTable_TableName" unique="false" columns="ID_Table"/>
+    </table>
+    <table name="articles" schema="" catalog="risingsun" type="TABLE">
+      <column name="ID" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="Title" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="Article" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="Author" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="NamePage" sqlType="VARCHAR" precision="1500" scale="0" nullable="false" jdbcType="12"/>
+      <column name="DateCreate" sqlType="TIMESTAMP" precision="19" scale="0" nullable="false" jdbcType="93" def="Q1VSUkVOVF9USU1FU1RBTVA=" version="true"/>
+      <primary-key name="PRIMARY" columns="ID"/>
+      <foreign-key name="Articles_Users" columns="Author" ref-table="users" ref-schema="" ref-catalog="risingsun" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="FirstPage_Articles" table="firstpage" schema="" catalog="risingsun" columns="Article_ID"/>
+      <exported-key name="TegsArcticle_Articles" table="tagsarcticle" schema="" catalog="risingsun" columns="ID_Arcticle"/>
+      <index name="Articles_Users" unique="false" columns="Author"/>
+    </table>
+    <table name="firstpage" schema="" catalog="risingsun" type="TABLE">
+      <column name="ID" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="Article_ID" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="Raiting" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="ID"/>
+      <foreign-key name="FirstPage_Articles" columns="Article_ID" ref-table="articles" ref-schema="" ref-catalog="risingsun" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FirstPage_Articles" unique="false" columns="Article_ID"/>
+    </table>
+    <table name="rules" schema="" catalog="risingsun" type="TABLE">
+      <column name="ID" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="NameRule" sqlType="VARCHAR" precision="1500" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="ID"/>
+      <exported-key name="AccessTable_Rules" table="accesstable" schema="" catalog="risingsun" columns="ID_Rules"/>
+      <exported-key name="UsersRules_Rules" table="usersrules" schema="" catalog="risingsun" columns="ID_Rules"/>
+    </table>
+    <table name="tablename" schema="" catalog="risingsun" type="TABLE">
+      <column name="ID" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="TableName" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="ID"/>
+      <exported-key name="AccessTable_TableName" table="accesstable" schema="" catalog="risingsun" columns="ID_Table"/>
+    </table>
+    <table name="tags" schema="" catalog="risingsun" type="TABLE">
+      <column name="ID" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="Name" sqlType="VARCHAR" precision="1500" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="ID"/>
+      <exported-key name="TegsArcticle_Tegs" table="tagsarcticle" schema="" catalog="risingsun" columns="ID_Teg"/>
+    </table>
+    <table name="tagsarcticle" schema="" catalog="risingsun" type="TABLE">
+      <column name="ID" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="ID_Teg" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="ID_Arcticle" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="ID"/>
+      <foreign-key name="TegsArcticle_Articles" columns="ID_Arcticle" ref-table="articles" ref-schema="" ref-catalog="risingsun" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="TegsArcticle_Tegs" columns="ID_Teg" ref-table="tags" ref-schema="" ref-catalog="risingsun" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="TegsArcticle_Articles" unique="false" columns="ID_Arcticle"/>
+      <index name="TegsArcticle_Tegs" unique="false" columns="ID_Teg"/>
+    </table>
+    <table name="users" schema="" catalog="risingsun" type="TABLE">
+      <column name="ID" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="Name" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="Login" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="ID"/>
+      <exported-key name="Articles_Users" table="articles" schema="" catalog="risingsun" columns="Author"/>
+      <exported-key name="UsersRules_Users" table="usersrules" schema="" catalog="risingsun" columns="ID_Users"/>
+    </table>
+    <table name="usersrules" schema="" catalog="risingsun" type="TABLE">
+      <column name="ID" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="ID_Users" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="ID_Rules" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="ID"/>
+      <foreign-key name="UsersRules_Rules" columns="ID_Rules" ref-table="rules" ref-schema="" ref-catalog="risingsun" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="UsersRules_Users" columns="ID_Users" ref-table="users" ref-schema="" ref-catalog="risingsun" ref-columns="ID" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="UsersRules_Rules" unique="false" columns="ID_Rules"/>
+      <index name="UsersRules_Users" unique="false" columns="ID_Users"/>
+    </table>
+  </data-source>
+</component>
