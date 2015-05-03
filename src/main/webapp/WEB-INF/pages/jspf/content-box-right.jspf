@@ -1,0 +1,31 @@
+
+<div class="content-box-right-in">
+	<h4>Archive</h4>
+	<ul>
+		<li><a href="#">February 2008</a></li>
+		<li><a href="#">January 2008</a></li>
+		<li><a href="#">December 2007</a></li>
+		<li><a href="#">November 2007</a></li>
+		<li><a href="#">October 2007</a></li>
+		<li><a href="#">Semptember 2007</a></li>
+		<li><a href="#">August 2007</a></li>
+		<li><a href="#">July 2007</a></li>
+		<li><a href="#">June 2007</a></li>
+		<li><a href="#">May 2007</a></li>
+		<li><a href="#">April 2007</a></li>
+		<li><a href="#">March 2007</a></li>
+	</ul>
+
+	<h4>Contact information</h4>
+	<address>
+		<span>E-mail:</span> nick&#64;
+		<!---->
+		name.cz<br /> <span><abbr title="Windows Live Messenger">WLM</abbr>:</span>
+		nick&#64;
+		<!---->
+		name.cz<br /> <span>Jabber:</span> nick&#64;
+		<!---->
+		name.cz
+	</address>
+
+</div>

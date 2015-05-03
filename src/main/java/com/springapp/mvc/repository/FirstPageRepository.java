@@ -2,6 +2,7 @@ package com.springapp.mvc.repository;
 
 import com.springapp.mvc.domain.ArticlesEntity;
 import com.springapp.mvc.domain.FirstpageEntity;
+import com.springapp.mvc.domain.UsersEntity;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,7 @@ public class FirstPageRepository {
     }
 
     public List<FirstpageEntity> listAll(){
-        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM firstpage LEFT JOIN articles on firstpage.Article_ID=articles.ID order by Raiting").addEntity(ArticlesEntity.class).list();
+        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM firstpage LEFT JOIN articles on firstpage.Article_ID=articles.ID LEFT JOIN users on users.ID = articles.Author order by Raiting").addEntity(FirstpageEntity.class).addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).list();
     }
 
     public void removeFirstPage(Integer id){
