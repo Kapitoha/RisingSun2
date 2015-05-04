@@ -11,12 +11,11 @@
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
 <!-- CSS -->
-<link rel="stylesheet" href="/resources/css/style.css" type="text/css"
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" type="text/css"
 	media="screen, projection, tv" />
-<!--[if lte IE 6]><link rel="/resources/stylesheet" type="text/css" href="/resources/css/style-ie.css" media="screen, projection, tv" /><![endif]-->
-<link rel="stylesheet" href="/resources/css/style-print.css"
+<!--[if lte IE 6]><link rel="${pageContext.request.contextPath}/resources/stylesheet" type="text/css" href="/resources/css/style-ie.css" media="screen, projection, tv" /><![endif]-->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style-print.css"
 	type="text/css" media="print" />
 
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />

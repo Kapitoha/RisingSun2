@@ -10,7 +10,7 @@
 			<!-- Slogan for your blog end -->
 
 			<!-- Search form -->
-			<%@ include file="../jspf/search-form.jspf"%>
+			<%@ include file="../jspf/search-form.jsp"%>
 			<!-- Search form end -->
 
 			<a href="#skip-menu" class="hidden">Skip menu</a>

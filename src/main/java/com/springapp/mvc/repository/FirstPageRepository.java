@@ -23,8 +23,18 @@ public class FirstPageRepository {
     }
 
     public List<FirstpageEntity> listAll(){
-        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM firstpage LEFT JOIN articles on firstpage.Article_ID=articles.ID LEFT JOIN users on users.ID = articles.Author order by Raiting").addEntity(FirstpageEntity.class).addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).list();
+        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM firstpage LEFT JOIN articles on firstpage.Article_ID=articles.ID LEFT JOIN users on users.ID = articles.Author order by Raiting").addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).list();
     }
+
+    public List<FirstpageEntity> newsByName(String name){
+        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM firstpage LEFT JOIN articles on firstpage.Article_ID=articles.ID LEFT JOIN users on users.ID = articles.Author WHERE articles.NamePage=:name order by Raiting").addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).setString("name", name).list();
+    }
+
+
+
+    public List<FirstpageEntity> newsSearch(String name){
+        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM firstpage LEFT JOIN articles on firstpage.Article_ID=articles.ID LEFT JOIN users on users.ID = articles.Author WHERE articles.NamePage LIKE :name% order by Raiting").addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).setString("name", name).list();
+}
 
     public void removeFirstPage(Integer id){
         FirstpageEntity first=(FirstpageEntity)this.sessionFactory.getCurrentSession().load(FirstpageEntity.class,id);

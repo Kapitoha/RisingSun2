@@ -5,8 +5,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
+	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
-<%@ include file="../pages/jspf/meta.jsp"%>
+<%@ include file="../pages/jspf/meta.jspf"%>
 <title>Rising sun| Homepage</title>
 </head>
 
@@ -15,12 +16,12 @@
 
 		<!-- Header -->
 		<div id="header">
-			<%@ include file="../pages/jspf/header.jsp"%>
+			<%@ include file="../pages/jspf/header.jspf"%>
 		</div>
 
 		<!-- menu bar -->
 		<div id="menu_pane">
-			<%@ include file="../pages/jspf/menubar.jsp"%>
+			<%@ include file="../pages/jspf/menubar.jspf"%>
 		</div>
 
 		<!-- Content  -->
@@ -49,7 +50,7 @@
 												<p><f:formatDate type="date" value="${news[0].dateCreate}" pattern="MM/yyyy" /></p>
 											</div>
 											<h3>
-												<a href="news/${news[0].namePage}"> ${news[0].title}&hellip;</a>
+												<a href="${news[0].namePage}"> ${news[0].title}&hellip;</a>
 											</h3>
 											<div class="info">
 												<div class="info-in">
@@ -61,10 +62,7 @@
 											<p>
                                                 ${news[0].article}
 											</p>
-											<p class="continue">
-												[<a href="news/${news[0].namePage}">Continue&hellip;</a>]
-											</p>
-                                        </div>
+										</div>
                                         </c:forEach>
                                       </c:if>
                                     </div>
@@ -81,7 +79,7 @@
 
 				<!-- Content box right -->
 				<div id="content-box-right">
-					<%@ include file="../pages/jspf/content-box-right.jsp"%>
+					<%@ include file="../pages/jspf/content-box-right.jspf"%>
 				</div>
 				<!-- Content box right end -->
 				<div class="cleaner">&nbsp;</div>
@@ -95,7 +93,7 @@
 		<hr class="noscreen" />
 
 		<!-- Footer -->
-		<%@ include file="../pages/jspf/footer.jsp"%>
+		<%@ include file="../pages/jspf/footer.jspf"%>
 		<!-- Footer end -->
 
 	</div>
