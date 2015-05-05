@@ -23,7 +23,26 @@ public class FirstPageRepository {
     }
 
     public List<FirstpageEntity> listAll(){
-        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM firstpage LEFT JOIN articles on firstpage.Article_ID=articles.ID LEFT JOIN users on users.ID = articles.Author order by Raiting").addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).list();
+        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT \n" +
+                "    firstpage.ID,\n" +
+                "    firstpage.Article_ID,\n" +
+                "    firstpage.Raiting,\n" +
+                "    Replace(Replace(Replace(Replace(articles.Article,\"<p>\",\"\"),\"</p>\",\"\"),\"<strong>\",\"\"),\"</strong>\",\"\") as Article,\n" +
+                "    articles.Author,\n" +
+                "    articles.ID,\n" +
+                "    articles.Title,\n" +
+                "    articles.NamePage,\n" +
+                "    articles.DateCreate,\n" +
+                "    users.ID,\n" +
+                "    users.Name,\n" +
+                "    users.Login\n" +
+                "FROM\n" +
+                "    firstpage\n" +
+                "        LEFT JOIN\n" +
+                "    articles ON firstpage.Article_ID = articles.ID\n" +
+                "        LEFT JOIN\n" +
+                "    users ON users.ID = articles.Author\n" +
+                "ORDER BY Raiting").addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).list();
     }
 
     public List<FirstpageEntity> newsByName(String name){
