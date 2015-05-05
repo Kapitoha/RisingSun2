@@ -31,11 +31,6 @@ public class FirstPageRepository {
     }
 
 
-
-    public List<FirstpageEntity> newsSearch(String name){
-        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM firstpage LEFT JOIN articles on firstpage.Article_ID=articles.ID LEFT JOIN users on users.ID = articles.Author WHERE articles.NamePage LIKE :name% order by Raiting").addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).setString("name", name).list();
-}
-
     public void removeFirstPage(Integer id){
         FirstpageEntity first=(FirstpageEntity)this.sessionFactory.getCurrentSession().load(FirstpageEntity.class,id);
         if (null!=first){

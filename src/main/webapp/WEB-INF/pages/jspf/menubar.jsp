@@ -2,7 +2,7 @@
 		<div>
 			<!-- Menu -->
 			<ul id="menu">
-				<li id="active"><a href="/">Home<span class="tab-l"></span><span
+				<li id="active"><a href="${pageContext.request.contextPath}/">Home<span class="tab-l"></span><span
 						class="tab-r"></span></a></li>
 				<li><a href="#">Contact<span class="tab-l"></span><span
 						class="tab-r"></span></a></li>

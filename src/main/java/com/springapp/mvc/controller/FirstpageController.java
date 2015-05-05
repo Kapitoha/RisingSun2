@@ -1,12 +1,11 @@
 package com.springapp.mvc.controller;
 
-import com.springapp.mvc.domain.ArticlesEntity;
 import com.springapp.mvc.domain.FirstpageEntity;
+import com.springapp.mvc.domain.Search;
 import com.springapp.mvc.repository.FirstPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,11 +42,10 @@ public class FirstpageController {
         return "news";
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public String search(@ModelAttribute("search") ArticlesEntity article, BindingResult bindingResult) {
-//       List<FirstpageEntity> news = this.firstPageRepository.newsSearch(article.getNamePage());
-//       model.addAttribute("search", news);
-
-        return "search";
+    @ModelAttribute("search")
+    public Search search() {
+        return new Search();
     }
+
+
 }

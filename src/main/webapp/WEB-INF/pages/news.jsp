@@ -3,11 +3,10 @@
 <%@ page language="java" import="javax.servlet.jsp.PageContext" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
 <head>
-	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
-<%@ include file="../pages/jspf/meta.jspf"%>
+<%@ include file="../pages/jspf/meta.jsp"%>
 <title>Rising sun| Homepage</title>
 </head>
 
@@ -16,12 +15,12 @@
 
 		<!-- Header -->
 		<div id="header">
-			<%@ include file="../pages/jspf/header.jspf"%>
+			<%@ include file="../pages/jspf/header.jsp"%>
 		</div>
 
 		<!-- menu bar -->
 		<div id="menu_pane">
-			<%@ include file="../pages/jspf/menubar.jspf"%>
+			<%@ include file="../pages/jspf/menubar.jsp"%>
 		</div>
 
 		<!-- Content  -->
@@ -79,7 +78,7 @@
 
 				<!-- Content box right -->
 				<div id="content-box-right">
-					<%@ include file="../pages/jspf/content-box-right.jspf"%>
+					<%@ include file="../pages/jspf/content-box-right.jsp"%>
 				</div>
 				<!-- Content box right end -->
 				<div class="cleaner">&nbsp;</div>
@@ -93,7 +92,7 @@
 		<hr class="noscreen" />
 
 		<!-- Footer -->
-		<%@ include file="../pages/jspf/footer.jspf"%>
+		<%@ include file="../pages/jspf/footer.jsp"%>
 		<!-- Footer end -->
 
 	</div>

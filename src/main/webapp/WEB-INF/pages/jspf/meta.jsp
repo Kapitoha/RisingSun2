@@ -10,7 +10,9 @@
 
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1250" />
+
+<meta http-equiv="Content-Language" Content="ru">
 <!-- CSS -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" type="text/css"
 	media="screen, projection, tv" />

@@ -3,15 +3,31 @@
 <%@ page language="java" import="javax.servlet.jsp.PageContext" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
 <head>
+	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
+	<script src="http://jtruncate.googlecode.com/svn/trunk/jquery.jtruncate.js" type="text/javascript"></script>
 
-<%@ include file="../pages/jspf/meta.jsp"%>
+	<%@ include file="../pages/jspf/meta.jsp"%>
 <title>Rising sun| Homepage</title>
 </head>
 
 <body>
-	<div id="wrapper">
+
+<script type="text/javascript">
+			$(document).ready(function() {
+				$('.textarticle').jTruncate({
+					length: 200, /* The number of characters to display before truncating. */
+					minTrail: 0, /* The minimum number of "extra" characters required to truncate. This option allows you to prevent truncation of a section of text that is only a few characters longer than the specified length. */
+					moreText: "Read More", // The text to use for the "more" link.
+					lessText: "Read Less", // The text to use for the "less" link.
+					ellipsisText: "..." // The text to append to the truncated portion.
+				});
+			});
+</script>
+
+
+<div id="wrapper">
 
 		<!-- Header -->
 		<div id="header">
@@ -58,16 +74,25 @@
 													</p>
 												</div>
 											</div>
-											<p>
-                                                ${news[0].article}
-											</p>
+											<div class="textarticle">
+												<p>
+														${news[0].article}
+												</p>
+											</div>
 											<p class="continue">
 												[<a href="news/${news[0].namePage}">Continue&hellip;</a>]
 											</p>
-                                        </div>
-                                        </c:forEach>
-                                      </c:if>
-                                    </div>
+
+
+
+										</div>
+											<p>
+
+
+											</p>
+										</c:forEach>
+									  </c:if>
+									</div>
 								</div>
 							</div>
 						</div>

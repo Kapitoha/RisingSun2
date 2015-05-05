@@ -32,6 +32,10 @@ public class ArticlesRepository {
         return this.sessionFactory.getCurrentSession().createQuery("from articles").list();
     }
 
+    public List<ArticlesEntity> newsSearch(String name){
+        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM articles WHERE articles.Article LIKE :name order by DateCreate").addEntity(ArticlesEntity.class).setString("name", name).list();
+    }
+
     public void removeArticle(Integer id){
         ArticlesEntity article=(ArticlesEntity)this.sessionFactory.getCurrentSession().load(ArticlesEntity.class,id);
         if(null!=article){
