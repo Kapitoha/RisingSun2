@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -29,19 +30,24 @@ public class ArticlesController {
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String search(@ModelAttribute("search") Search search, BindingResult bindingResult, Model model) {
         List<ArticlesEntity> news = this.articlesRepository.newsSearch("%"+search.getSearch()+"%");
+        List<Date> list=this.articlesRepository.newsArchive();
         model.addAttribute("allnews", news);
-
+        model.addAttribute("archive", list);
         return "search";
     }
 
-//    @RequestMapping(value = "/", method = RequestMethod.GET)
-//    public String getArchive(Model model) {
-//        List<String> archive = this.articlesRepository.newsArchive();
-//
-//        model.addAttribute("archive", archive);
-//
-//        return "jspf/content-box-right";
-//    }
+    @ModelAttribute("search")
+    public Search search() {
+        return new Search();
+    }
 
+    @RequestMapping(value = "archive/{date}", method = RequestMethod.GET)
+    public String search(@PathVariable Date date, Model model) {
+        List<ArticlesEntity> news = this.articlesRepository.newsArchive(date);
+        List<Date> list=this.articlesRepository.newsArchive();
+        model.addAttribute("allnews", news);
+        model.addAttribute("archive", list);
+        return "search";
+    }
 
 }

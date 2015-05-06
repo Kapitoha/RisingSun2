@@ -14,6 +14,8 @@ public class ArticlesEntity {
     private String title;
     private String article;
     private String namePage;
+    private String image;
+    private boolean archive;
     private Timestamp dateCreate;
     private UsersEntity usersByAuthor;
     private Collection<FirstpageEntity> firstpagesById;
@@ -58,6 +60,27 @@ public class ArticlesEntity {
 
     public void setNamePage(String namePage) {
         this.namePage = namePage;
+    }
+
+    @Basic
+    @Column(name = "Archive", nullable = false, insertable = true, updatable = true)
+    public boolean getArchive() {
+        return archive;
+    }
+
+    public void setArchive(boolean archive) {
+        this.archive = archive;
+    }
+
+
+    @Basic
+    @Column(name = "Image", nullable = false, insertable = true, updatable = true, length = 1500)
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Basic

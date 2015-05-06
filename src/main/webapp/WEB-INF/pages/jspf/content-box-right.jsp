@@ -4,7 +4,7 @@
 	<ul>
 		<c:if test = "${!empty archive}">
 		<c:forEach items = "${archive}" var = "arch">
-			<li><a href="archive/${arch}"><f:formatDate type="date" value="${arch}" pattern="MMMM/yy" /></a></li>
+			<li><a href="archive/${arch}"><f:formatDate type="date" value="${arch}" pattern="MM-yyyy" /></a></li>
 		</c:forEach>
 		</c:if>
 	</ul>
