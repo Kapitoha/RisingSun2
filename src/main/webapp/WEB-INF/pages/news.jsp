@@ -7,7 +7,7 @@
 <head>
 
 <%@ include file="../pages/jspf/meta.jsp"%>
-<title>Rising sun| Homepage</title>
+<title>Rising sun news</title>
 </head>
 
 <body>

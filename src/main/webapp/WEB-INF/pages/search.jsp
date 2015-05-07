@@ -8,7 +8,7 @@
 	<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <%@ include file="../pages/jspf/meta.jsp"%>
-<title>Rising sun| Homepage</title>
+<title>Rising sun news</title>
 </head>
 
 <body>
@@ -34,12 +34,28 @@
 				<div id="content-box-left">
 
 					<div id="content-box-left-in">
+						<div class="box">
+							<div class="box-top">
+								<div class="box-bottom">
+									<div class="info-in">
 
+									</div>
+							<c:if test = "${!empty searchr}">
+								<p>
+									<span style="color: #003B69; font-size: medium; font-weight: bold;"> ${searchr}</span>
+								</p>
+							</c:if>
+								</div>
+							</div>
+						</div>
 						<!-- Content box with light blue background -->
 						<div class="box">
 							<div class="box-top">
 								<div class="box-bottom">
 									<div id="box-in">
+										<div class="info-in">
+
+										</div>
                                       <c:if test = "${!empty allnews}">
                                         <c:forEach items = "${allnews}" var = "news">
 										<div class="article">

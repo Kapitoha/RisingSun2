@@ -19,8 +19,8 @@
 				$('.textarticle').jTruncate({
 					length: 700, /* The number of characters to display before truncating. */
 					minTrail: 20, /* The minimum number of "extra" characters required to truncate. This option allows you to prevent truncation of a section of text that is only a few characters longer than the specified length. */
-					moreText: "Read More", // The text to use for the "more" link.
-					lessText: "Read Less", // The text to use for the "less" link.
+					moreText: "Read more", // The text to use for the "more" link.
+					lessText: "Read less", // The text to use for the "less" link.
 					ellipsisText: "..." // The text to append to the truncated portion.
 				});
 			});
