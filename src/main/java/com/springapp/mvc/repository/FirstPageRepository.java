@@ -2,6 +2,7 @@ package com.springapp.mvc.repository;
 
 import com.springapp.mvc.domain.ArticlesEntity;
 import com.springapp.mvc.domain.FirstpageEntity;
+import com.springapp.mvc.domain.TagsEntity;
 import com.springapp.mvc.domain.UsersEntity;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class FirstPageRepository {
     }
 
     public List<FirstpageEntity> listAll(){
-        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM firstpage LEFT JOIN articles ON firstpage.Article_ID = articles.ID LEFT JOIN users ON users.ID = articles.Author ORDER BY Raiting").addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).list();
+        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM firstpage LEFT JOIN articles ON firstpage.Article_ID = articles.ID LEFT JOIN users ON users.ID = articles.Author ORDER BY Feature desc,Raiting").addEntity(FirstpageEntity.class).addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).list();
     }
 
     public List<FirstpageEntity> newsByName(String name){
@@ -41,6 +42,11 @@ public class FirstPageRepository {
         if (null!=first){
             this.sessionFactory.getCurrentSession().delete(first);
         }
+    }
+
+
+    public List<TagsEntity> tagsByNewsName(String name){
+        return this.sessionFactory.getCurrentSession().createSQLQuery("Select tags.* from tags left join tagsarcticle on tags.ID=tagsarcticle.ID_Teg left join articles on tagsarcticle.ID_Arcticle=articles.ID where articles.NamePage=:name").addEntity(TagsEntity.class).setString("name", name).list();
     }
 
 }

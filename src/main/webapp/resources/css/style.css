@@ -118,6 +118,15 @@ color: #004C87;
 margin: 12px 0 3px 0;
 }
 
+h5 {
+	font-size: 1.6em;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	color: #dc143c;
+	font-weight: normal;
+	letter-spacing: 1px;
+	margin-bottom: 7px;
+}
+
 address {
 font-style: normal;
 line-height: 1.7;
@@ -245,7 +254,7 @@ margin-left: 3px;
 float: left;
 display: block;
 padding: 0 20px;
-background-image: url('../img/btn_menu.png') repeat-x 0 0;
+/*background-image: url('../img/btn_menu.png') repeat-x 0 0;*/
 color: #FFFFFF;
 text-decoration: none;
 height: 29px;

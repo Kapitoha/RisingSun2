@@ -50,7 +50,7 @@
 												<p><f:formatDate type="date" value="${news.dateCreate}" pattern="MM/yyyy" /></p>
 											</div>
 											<h3>
-												<a href="news/${news.namePage}"> ${news.title}&hellip;</a>
+												<a href="/news/${news.namePage}"> ${news.title}&hellip;</a>
 											</h3>
 
 										</div>

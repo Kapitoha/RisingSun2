@@ -61,35 +61,45 @@
 										<div class="article">
 											<div class="date">
 												<p class="day">
-													<span><f:formatDate type="date" value="${news[0].dateCreate}" pattern="dd" />th</span>
+													<span><f:formatDate type="date" value="${news[1].dateCreate}" pattern="dd" />th</span>
 												</p>
-												<p><f:formatDate type="date" value="${news[0].dateCreate}" pattern="MM/yyyy" /></p>
+												<p><f:formatDate type="date" value="${news[1].dateCreate}" pattern="MM/yyyy" /></p>
 											</div>
-											<h3>
-												<a href="news/${news[0].namePage}">${news[0].title}</a>
-											</h3>
+
+											<c:if test="${news[0].feature}">
+												<h3>
+													<a href="news/${news[1].namePage}" style="color: red;" >TOP NEWS: ${news[1].title}</a>
+												</h3>
+											</c:if>
+
+											<c:if test="${!news[0].feature}">
+												<h3>
+													<a href="news/${news[1].namePage}">${news[1].title}</a>
+												</h3>
+											</c:if>
+
 											<div class="info">
 												<div class="info-in">
 													<p>
-														 Author: ${news[1].name}
+														 Author: ${news[2].name}
 													</p>
 												</div>
 											</div>
 											<div class="textarticle">
-												<c:if test="${empty news[0].image}">
+												<c:if test="${empty news[1].image}">
 													<img src="${pageContext.request.contextPath}/resources/img/sunr.jpg"
 														 align="left" width="120" height="100">
 												</c:if>
 
-												<c:if test="${!empty news[0].image}">
-													<img src="${news[0].image}" align="left" width="120" height="100">
+												<c:if test="${!empty news[1].image}">
+													<img src="${news[1].image}" align="left" width="120" height="100">
 												</c:if>
 												<p>
-														${news[0].article}
+														${news[1].article}
 												</p>
 											</div>
 											<p class="continue">
-												[<a href="news/${news[0].namePage}">See all&hellip;</a>]
+												[<a href="news/${news[1].namePage}">See all&hellip;</a>]
 											</p>
 
 

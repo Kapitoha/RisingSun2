@@ -3,6 +3,7 @@ package com.springapp.mvc.controller;
 import com.springapp.mvc.domain.ArticlesEntity;
 import com.springapp.mvc.domain.FirstpageEntity;
 import com.springapp.mvc.domain.Search;
+import com.springapp.mvc.domain.TagsEntity;
 import com.springapp.mvc.repository.ArticlesRepository;
 import com.springapp.mvc.repository.FirstPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +34,11 @@ public class FirstpageController {
         List<FirstpageEntity> news = this.firstPageRepository.listAll();
 
         for (Object list:news){
-
             Object[] objectory=(Object[]) list;
-
-            ArticlesEntity article=(ArticlesEntity) objectory[0];
-
+            ArticlesEntity article=(ArticlesEntity) objectory[1];
             String ourText=org.apache.taglibs.string.util.XmlW.removeXml(article.getArticle());
             int len=Math.min(3000, ourText.length() - 1);
-
             article.setArticle(ourText.substring(0, len) + "...");
-
         }
 
         List<Date> list=this.firstPageRepository.newsArchive();
@@ -56,9 +52,10 @@ public class FirstpageController {
     public String getNewsByName(@PathVariable String name, Model model) {
         List<FirstpageEntity> news = this.firstPageRepository.newsByName(name);
         List<Date> list=this.firstPageRepository.newsArchive();
+        List<TagsEntity> tags=this.firstPageRepository.tagsByNewsName(name);
         model.addAttribute("allnews", news);
         model.addAttribute("archive", list);
-
+        model.addAttribute("tags", tags);
         return "news";
     }
 

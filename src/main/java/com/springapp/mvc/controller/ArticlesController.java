@@ -50,4 +50,13 @@ public class ArticlesController {
         return "search";
     }
 
+    @RequestMapping(value = "tags/{tag}", method = RequestMethod.GET)
+    public String search(@PathVariable String tag,  Model model) {
+        List<ArticlesEntity> news = this.articlesRepository.newsSearch("%" + tag+ "%");
+        List<Date> list=this.articlesRepository.newsArchive();
+        model.addAttribute("allnews", news);
+        model.addAttribute("archive", list);
+        return "search";
+    }
+
 }
