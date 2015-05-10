@@ -17,16 +17,26 @@
       <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
       </profile>
+<<<<<<< HEAD
       <profile default="false" name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+=======
+      <profile default="false" name="Annotation profile for risingsun" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+>>>>>>> upstream/master
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="RisingSun2" />
+        <module name="risingsun" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+<<<<<<< HEAD
       <module name="RisingSun2" target="1.7" />
+=======
+      <module name="risingsun" target="1.6" />
+>>>>>>> upstream/master
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -47,8 +47,6 @@ public class UsersEntity extends BaseEntity {
     public void setLogin(String login) {
         this.login = login;
     }
-
-
     @Basic
     @Column(name = "password", nullable = false, insertable = true, updatable = true, length = 50)
     public String getPassword() {
