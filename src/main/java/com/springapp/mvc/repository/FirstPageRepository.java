@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
-=======
 import java.sql.Date;
->>>>>>> upstream/master
 import java.util.List;
 
 /**
@@ -31,7 +28,6 @@ public class FirstPageRepository {
     }
 
     public List<FirstpageEntity> listAll(){
-<<<<<<< HEAD
 	Session session = sessionFactory.openSession();
 	List<FirstpageEntity> list = session.createSQLQuery("SELECT \n" +
                 "    firstpage.ID,\n" +
@@ -55,9 +51,6 @@ public class FirstPageRepository {
                 "ORDER BY Raiting").addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).list();
 	session.close();
 	return list;
-=======
-        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM firstpage LEFT JOIN articles ON firstpage.Article_ID = articles.ID LEFT JOIN users ON users.ID = articles.Author ORDER BY Feature desc,Raiting").addEntity(FirstpageEntity.class).addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).list();
->>>>>>> upstream/master
     }
 
     public List<FirstpageEntity> newsByName(String name){

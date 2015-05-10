@@ -3,27 +3,16 @@ package com.springapp.mvc.repository;
 import com.springapp.mvc.dao.DAOManager;
 import com.springapp.mvc.dao.DAOmngr;
 import com.springapp.mvc.domain.ArticlesEntity;
-<<<<<<< HEAD
 
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-=======
 import com.springapp.mvc.domain.TagsEntity;
-import org.hibernate.SessionFactory;
-import org.hibernate.transform.Transformers;
->>>>>>> upstream/master
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-<<<<<<< HEAD
-=======
 import java.sql.Date;
-import java.util.Calendar;
->>>>>>> upstream/master
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Alex on 01.05.2015.
@@ -75,7 +64,7 @@ public class ArticlesRepository {
     }
 
     public void removeArticle(Integer id){
-        DAOManager.deleteInstance(id, ArticlesEntity.class);
+	new DAOmngr(sessionFactory).deleteInstance(id, ArticlesEntity.class);
         }
 }
 

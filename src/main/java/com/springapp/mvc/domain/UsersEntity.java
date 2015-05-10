@@ -12,6 +12,8 @@ public class UsersEntity extends BaseEntity {
     private int id;
     private String name;
     private String login;
+    private String password;
+    private String status;
     private Collection<ArticlesEntity> articlesById;
     private Collection<UsersrulesEntity> usersrulesById;
 
@@ -44,6 +46,29 @@ public class UsersEntity extends BaseEntity {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+
+    @Basic
+    @Column(name = "password", nullable = false, insertable = true, updatable = true, length = 50)
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
+    @Basic
+    @Column(name = "status", nullable = false, insertable = true, updatable = true, length = 50)
+    @Enumerated(EnumType.STRING)
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
