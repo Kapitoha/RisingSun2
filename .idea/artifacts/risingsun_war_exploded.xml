@@ -1,10 +1,10 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" build-on-make="true" name="RisingSun2:war exploded">
+  <artifact type="exploded-war" name="risingsun:war exploded">
     <output-path>$PROJECT_DIR$/target/risingsun</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="RisingSun2" />
+          <element id="module-output" name="risingsun" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.springframework:spring-core:4.1.1.RELEASE" />
@@ -43,7 +43,7 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/target/risingsun/META-INF/MANIFEST.MF" />
       </element>
-      <element id="javaee-facet-resources" facet="RisingSun2/web/Web" />
+      <element id="javaee-facet-resources" facet="risingsun/web/Web" />
     </root>
   </artifact>
 </component>

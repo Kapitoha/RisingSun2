@@ -4,7 +4,6 @@ import com.springapp.mvc.domain.ArticlesEntity;
 import com.springapp.mvc.domain.FirstpageEntity;
 import com.springapp.mvc.domain.Search;
 import com.springapp.mvc.domain.TagsEntity;
-import com.springapp.mvc.repository.ArticlesRepository;
 import com.springapp.mvc.repository.FirstPageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

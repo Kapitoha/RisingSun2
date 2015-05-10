@@ -1,8 +1,8 @@
 <component name="ArtifactManager">
-  <artifact type="war" build-on-make="true" name="RisingSun2:war">
+  <artifact type="war" name="risingsun:war">
     <output-path>$PROJECT_DIR$/target</output-path>
     <root id="archive" name="risingsun.war">
-      <element id="artifact" artifact-name="RisingSun2:war exploded" />
+      <element id="artifact" artifact-name="risingsun:war exploded" />
     </root>
   </artifact>
 </component>

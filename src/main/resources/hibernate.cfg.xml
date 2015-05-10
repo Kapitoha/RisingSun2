@@ -4,11 +4,9 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <mapping class="com.springapp.mvc.domain.AccesstableEntity"/>
         <mapping class="com.springapp.mvc.domain.ArticlesEntity"/>
         <mapping class="com.springapp.mvc.domain.FirstpageEntity"/>
         <mapping class="com.springapp.mvc.domain.RulesEntity"/>
-        <mapping class="com.springapp.mvc.domain.TablenameEntity"/>
         <mapping class="com.springapp.mvc.domain.TagsEntity"/>
         <mapping class="com.springapp.mvc.domain.TagsarcticleEntity"/>
         <mapping class="com.springapp.mvc.domain.UsersEntity"/>
