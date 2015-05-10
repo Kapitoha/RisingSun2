@@ -1,12 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ page language="java" import="javax.servlet.jsp.PageContext" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
 <head>
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
-	<script src="http://jtruncate.googlecode.com/svn/trunk/jquery.jtruncate.js" type="text/javascript"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/jquery.jtruncate.js" type="text/javascript"></script>
 
 	<%@ include file="../pages/jspf/meta.jsp"%>
 <title>Rising sun| Homepage</title>
@@ -17,14 +17,15 @@
 <script type="text/javascript">
 			$(document).ready(function() {
 				$('.textarticle').jTruncate({
-					length: 200, /* The number of characters to display before truncating. */
-					minTrail: 0, /* The minimum number of "extra" characters required to truncate. This option allows you to prevent truncation of a section of text that is only a few characters longer than the specified length. */
-					moreText: "Read More", // The text to use for the "more" link.
-					lessText: "Read Less", // The text to use for the "less" link.
+					length: 700, /* The number of characters to display before truncating. */
+					minTrail: 20, /* The minimum number of "extra" characters required to truncate. This option allows you to prevent truncation of a section of text that is only a few characters longer than the specified length. */
+					moreText: "Read more", // The text to use for the "more" link.
+					lessText: "Read less", // The text to use for the "less" link.
 					ellipsisText: "..." // The text to append to the truncated portion.
 				});
 			});
 </script>
+
 
 
 <div id="wrapper">
@@ -60,27 +61,45 @@
 										<div class="article">
 											<div class="date">
 												<p class="day">
-													<span><f:formatDate type="date" value="${news[0].dateCreate}" pattern="dd" />th</span>
+													<span><f:formatDate type="date" value="${news[1].dateCreate}" pattern="dd" />th</span>
 												</p>
-												<p><f:formatDate type="date" value="${news[0].dateCreate}" pattern="MM/yyyy" /></p>
+												<p><f:formatDate type="date" value="${news[1].dateCreate}" pattern="MM/yyyy" /></p>
 											</div>
-											<h3>
-												<a href="news/${news[0].namePage}"> ${news[0].title}&hellip;</a>
-											</h3>
+
+											<c:if test="${news[0].feature}">
+												<h3>
+													<a href="news/${news[1].namePage}" style="color: red;" >TOP NEWS: ${news[1].title}</a>
+												</h3>
+											</c:if>
+
+											<c:if test="${!news[0].feature}">
+												<h3>
+													<a href="news/${news[1].namePage}">${news[1].title}</a>
+												</h3>
+											</c:if>
+
 											<div class="info">
 												<div class="info-in">
 													<p>
-														 Author: ${news[1].name}
+														 Author: ${news[2].name}
 													</p>
 												</div>
 											</div>
 											<div class="textarticle">
+												<c:if test="${empty news[1].image}">
+													<img src="${pageContext.request.contextPath}/resources/img/sunr.jpg"
+														 align="left" width="120" height="100">
+												</c:if>
+
+												<c:if test="${!empty news[1].image}">
+													<img src="${news[1].image}" align="left" width="120" height="100">
+												</c:if>
 												<p>
-														${news[0].article}
+														${news[1].article}
 												</p>
 											</div>
 											<p class="continue">
-												[<a href="news/${news[0].namePage}">Continue&hellip;</a>]
+												[<a href="news/${news[1].namePage}">See all&hellip;</a>]
 											</p>
 
 

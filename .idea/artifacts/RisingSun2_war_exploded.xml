@@ -36,6 +36,7 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-orm:4.1.1.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:4.1.1.RELEASE" />
           <element id="library" level="project" name="Maven: jstl:jstl:1.2" />
+          <element id="library" level="project" name="Maven: taglibs:string:1.1.0" />
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.34" />
         </element>
       </element>

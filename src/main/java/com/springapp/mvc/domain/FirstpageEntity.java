@@ -10,6 +10,7 @@ import javax.persistence.*;
 public class FirstpageEntity extends BaseEntity {
     private int id;
     private int raiting;
+    private boolean feature;
     private ArticlesEntity articlesByArticleId;
 
     @Id
@@ -32,6 +33,18 @@ public class FirstpageEntity extends BaseEntity {
     public void setRaiting(int raiting) {
         this.raiting = raiting;
     }
+
+    @Basic
+    @Column(name = "feature", insertable = true, updatable = true)
+    @GeneratedValue
+    public boolean getFeature() {
+        return feature;
+    }
+
+    public void setFeature(boolean feature) {
+        this.feature = feature;
+    }
+
 
     @Override
     public boolean equals(Object o) {
