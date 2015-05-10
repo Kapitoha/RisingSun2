@@ -3,10 +3,13 @@ package com.springapp.mvc.repository;
 import com.springapp.mvc.domain.ArticlesEntity;
 import com.springapp.mvc.domain.FirstpageEntity;
 import com.springapp.mvc.domain.UsersEntity;
+
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -23,7 +26,8 @@ public class FirstPageRepository {
     }
 
     public List<FirstpageEntity> listAll(){
-        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT \n" +
+	Session session = sessionFactory.openSession();
+	List<FirstpageEntity> list = session.createSQLQuery("SELECT \n" +
                 "    firstpage.ID,\n" +
                 "    firstpage.Article_ID,\n" +
                 "    firstpage.Raiting,\n" +
@@ -43,6 +47,8 @@ public class FirstPageRepository {
                 "        LEFT JOIN\n" +
                 "    users ON users.ID = articles.Author\n" +
                 "ORDER BY Raiting").addEntity(ArticlesEntity.class).addEntity(UsersEntity.class).list();
+	session.close();
+	return list;
     }
 
     public List<FirstpageEntity> newsByName(String name){

@@ -8,7 +8,7 @@ import java.util.Collection;
  */
 @Entity
 @Table(name = "users")
-public class UsersEntity {
+public class UsersEntity extends BaseEntity {
     private int id;
     private String name;
     private String login;

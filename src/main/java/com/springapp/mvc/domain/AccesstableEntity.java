@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "accesstable")
-public class AccesstableEntity {
+public class AccesstableEntity extends BaseEntity {
     private int id;
     private int rule;
     private RulesEntity rulesByIdRules;

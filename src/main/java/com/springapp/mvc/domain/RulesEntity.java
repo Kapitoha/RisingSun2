@@ -8,7 +8,7 @@ import java.util.Collection;
  */
 @Entity
 @Table(name = "rules")
-public class RulesEntity {
+public class RulesEntity extends BaseEntity {
     private int id;
     private String nameRule;
     private Collection<AccesstableEntity> accesstablesById;

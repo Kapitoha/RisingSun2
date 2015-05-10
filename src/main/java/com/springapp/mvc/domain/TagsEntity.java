@@ -8,7 +8,7 @@ import java.util.Collection;
  */
 @Entity
 @Table(name = "tags")
-public class TagsEntity {
+public class TagsEntity extends BaseEntity {
     private int id;
     private String name;
     private Collection<TagsarcticleEntity> tagsarcticlesById;

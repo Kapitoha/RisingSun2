@@ -1,12 +1,16 @@
 package com.springapp.mvc.repository;
 
+import com.springapp.mvc.dao.DAOManager;
+import com.springapp.mvc.dao.DAOmngr;
 import com.springapp.mvc.domain.ArticlesEntity;
+
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.util.List;
 
 /**
@@ -20,8 +24,8 @@ public class ArticlesRepository {
     @Autowired
     private SessionFactory sessionFactory;
 
-    public void addArticle(ArticlesEntity arcticlesEntity){
-        this.sessionFactory.getCurrentSession().save(arcticlesEntity);
+    public boolean addArticle(ArticlesEntity arcticlesEntity){
+        return new DAOmngr(sessionFactory).saveInstance(arcticlesEntity);
     }
 
     public List<String> newsArchive(){
@@ -29,18 +33,17 @@ public class ArticlesRepository {
     }
 
     public List<ArticlesEntity> listAll(){
-        return this.sessionFactory.getCurrentSession().createQuery("from articles").list();
+        return new DAOmngr(sessionFactory).getInstanceList(ArticlesEntity.class);
     }
 
     public List<ArticlesEntity> newsSearch(String name){
-        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM articles WHERE articles.Article LIKE :name order by DateCreate").addEntity(ArticlesEntity.class).setString("name", name).list();
+        return new DAOmngr(sessionFactory).getInstanceList(ArticlesEntity.class, Order.asc("DateCreate"), Restrictions.like("Article", name));
+//        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM articles WHERE articles.Article LIKE :name order by DateCreate").addEntity(ArticlesEntity.class).setString("name", name).list();
     }
 
     public void removeArticle(Integer id){
-        ArticlesEntity article=(ArticlesEntity)this.sessionFactory.getCurrentSession().load(ArticlesEntity.class,id);
-        if(null!=article){
-            this.sessionFactory.getCurrentSession().delete(article);
+        DAOManager.deleteInstance(id, ArticlesEntity.class);
         }
-    }
 }
+
 

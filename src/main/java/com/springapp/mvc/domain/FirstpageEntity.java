@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "firstpage")
-public class FirstpageEntity {
+public class FirstpageEntity extends BaseEntity {
     private int id;
     private int raiting;
     private ArticlesEntity articlesByArticleId;
