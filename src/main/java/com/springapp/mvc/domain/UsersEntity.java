@@ -1,7 +1,10 @@
 package com.springapp.mvc.domain;
 
 import javax.persistence.*;
+
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Alex on 30.04.2015.
@@ -13,9 +16,13 @@ public class UsersEntity extends BaseEntity {
     private String name;
     private String login;
     private String password;
-    private String status;
-    private Collection<ArticlesEntity> articlesById;
-    private Collection<UsersrulesEntity> usersrulesById;
+    private Status status;
+    private Collection<ArticlesEntity> articlesById = Collections.emptyList();
+//    @Transient
+//    private Collection<UsersrulesEntity> usersrulesById = Collections.emptyList();
+    
+
+    private List<AccessRight> accessList = Collections.emptyList();
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true)
@@ -61,11 +68,11 @@ public class UsersEntity extends BaseEntity {
     @Basic
     @Column(name = "status", nullable = false, insertable = true, updatable = true, length = 50)
     @Enumerated(EnumType.STRING)
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -100,12 +107,26 @@ public class UsersEntity extends BaseEntity {
         this.articlesById = articlesById;
     }
 
-    @OneToMany(mappedBy = "usersByIdUsers")
-    public Collection<UsersrulesEntity> getUsersrulesById() {
-        return usersrulesById;
+//    @OneToMany(mappedBy = "usersByIdUsers", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+//    @EmbeddedId
+//    public Collection<UsersrulesEntity> getUsersrulesById() {
+//        return usersrulesById;
+//    }
+//
+//    public void setUsersrulesById(Collection<UsersrulesEntity> usersrulesById) {
+//        this.usersrulesById = usersrulesById;
+//    }
+    
+    @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinTable(name="users_rights")
+    @Column(name="access_right_id")
+    public List<AccessRight> getAccessList()
+    {
+	return accessList;
     }
 
-    public void setUsersrulesById(Collection<UsersrulesEntity> usersrulesById) {
-        this.usersrulesById = usersrulesById;
+    public void setAccessList(List<AccessRight> accessList)
+    {
+	this.accessList = accessList;
     }
 }

@@ -7,7 +7,7 @@
 <head>
 
 <%@ include file="../pages/jspf/meta.jsp"%>
-<title>Rising sun| Homepage</title>
+<title>Rising sun news</title>
 </head>
 
 <body>
@@ -61,6 +61,17 @@
 											<p>
                                                 ${news[0].article}
 											</p>
+
+											<div class="info">
+												<div class="info-in">
+													<p>
+														Tags:
+										  				<c:forEach items = "${tags}" var = "tag">
+															<a href="/tags/${tag.name}">${tag.name}</a>
+														</c:forEach>
+													</p>
+												</div>
+											</div>
 										</div>
                                         </c:forEach>
                                       </c:if>

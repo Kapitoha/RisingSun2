@@ -1,6 +1,5 @@
 package com.springapp.mvc.repository;
 
-import com.springapp.mvc.dao.DAOManager;
 import com.springapp.mvc.dao.DAOmngr;
 import com.springapp.mvc.domain.ArticlesEntity;
 

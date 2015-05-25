@@ -30,21 +30,22 @@ public class FirstpageController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getNews(Model model) {
-        List<FirstpageEntity> news = this.firstPageRepository.listAll();
-
-        for (Object list:news){
-            Object[] objectory=(Object[]) list;
-            ArticlesEntity article=(ArticlesEntity) objectory[1];
-            String ourText=org.apache.taglibs.string.util.XmlW.removeXml(article.getArticle());
-            int len=Math.min(3000, ourText.length() - 1);
-            article.setArticle(ourText.substring(0, len) + "...");
-        }
-
-        List<Date> list=this.firstPageRepository.newsArchive();
-
-        model.addAttribute("allnews", news);
-        model.addAttribute("archive", list);
-        return "index";
+	return "redirect:admin";
+//        List<FirstpageEntity> news = this.firstPageRepository.listAll();
+//
+//        for (Object list:news){
+//            Object[] objectory=(Object[]) list;
+//            ArticlesEntity article=(ArticlesEntity) objectory[1];
+//            String ourText=org.apache.taglibs.string.util.XmlW.removeXml(article.getArticle());
+//            int len=Math.min(3000, ourText.length() - 1);
+//            article.setArticle(ourText.substring(0, len) + "...");
+//        }
+//
+//        List<Date> list=this.firstPageRepository.newsArchive();
+//
+//        model.addAttribute("allnews", news);
+//        model.addAttribute("archive", list);
+//        return "index";
     }
 
     @RequestMapping(value = "news/{name}", method = RequestMethod.GET)

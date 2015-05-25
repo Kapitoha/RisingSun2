@@ -6,7 +6,7 @@ import java.util.Collection;
 /**
  * Created by Alex on 30.04.2015.
  */
-@Entity
+//@Entity
 @Table(name = "rules")
 public class RulesEntity extends BaseEntity {
     private int id;

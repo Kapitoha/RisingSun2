@@ -1,7 +1,6 @@
 package com.springapp.mvc.domain;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 /**
  * Created by Alex on 30.04.2015.
@@ -11,7 +10,7 @@ import java.util.Collection;
 public class TagsEntity extends BaseEntity {
     private int id;
     private String name;
-    private Collection<TagsarcticleEntity> tagsarcticlesById;
+//    private Collection<TagsarcticleEntity> tagsarcticlesById;
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true)
@@ -54,12 +53,12 @@ public class TagsEntity extends BaseEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "tagsByIdTeg")
-    public Collection<TagsarcticleEntity> getTagsarcticlesById() {
-        return tagsarcticlesById;
-    }
-
-    public void setTagsarcticlesById(Collection<TagsarcticleEntity> tagsarcticlesById) {
-        this.tagsarcticlesById = tagsarcticlesById;
-    }
+//    @OneToMany(mappedBy = "tagsByIdTeg")
+//    public Collection<TagsarcticleEntity> getTagsarcticlesById() {
+//        return tagsarcticlesById;
+//    }
+//
+//    public void setTagsarcticlesById(Collection<TagsarcticleEntity> tagsarcticlesById) {
+//        this.tagsarcticlesById = tagsarcticlesById;
+//    }
 }

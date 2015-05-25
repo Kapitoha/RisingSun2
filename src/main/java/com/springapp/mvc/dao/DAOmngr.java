@@ -19,19 +19,14 @@ import com.springapp.mvc.domain.BaseEntity;
  *
  */
 public class DAOmngr {
+    @Autowired
     private SessionFactory sessionFactory;
-    
-    public DAOmngr(SessionFactory sessionFactory)
-    {
-	this.sessionFactory = sessionFactory;
-    }
     
     public DAOmngr()
     {
     }
     
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory)
+    public DAOmngr(SessionFactory sessionFactory)
     {
 	this.sessionFactory = sessionFactory;
     }
@@ -41,7 +36,7 @@ public class DAOmngr {
         Transaction trans = null;
         try
         {
-            session = sessionFactory.getCurrentSession();
+            session = sessionFactory.openSession();
             trans = session.beginTransaction();
             session.save(instance);
             trans.commit();
@@ -55,12 +50,12 @@ public class DAOmngr {
             }
             System.err.println(instance.getClass().getName()
                     + " Save was unsuccessful. Rollback");
-            // e.printStackTrace();
+             e.printStackTrace();
             return false;
         }
         finally
         {
-            if (null != session && session.isOpen())
+            if (null != session)
             {
                 session.close();
             }
@@ -86,11 +81,12 @@ public class DAOmngr {
                 trans.rollback();
             }
             System.err.println("Update was unsuccessful. Rollback");
+            e.printStackTrace();
             return false;
         }
         finally
         {
-            if (null != session && session.isOpen())
+            if (null != session)
             {
                 session.close();
             }
@@ -153,7 +149,7 @@ public class DAOmngr {
         }
         finally
         {
-            if (null != session && session.isOpen())
+            if (null != session)
                 session.close();
         }
         return list;
@@ -166,7 +162,7 @@ public class DAOmngr {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         inst = (BaseEntity) session.get(instanceClass, id);
-        if (session != null && session.isOpen())
+        if (session != null)
         {
             session.close();
         }
@@ -181,7 +177,7 @@ public class DAOmngr {
      * @param instanceClass
      *            - Class of instance
      */
-    public <T extends BaseEntity> void deleteInstance(int id,
+    public <T extends BaseEntity> boolean deleteInstance(int id,
                                                               Class<T> instanceClass)
     {
         Session session = null;
@@ -197,11 +193,16 @@ public class DAOmngr {
                 transaction.commit();
             }
         }
+        catch(Exception e)
+        {
+            return false;
+        }
         finally
         {
-            if (null != session && session.isOpen())
+            if (null != session)
                 session.close();
         }
+        return true;
 
     }
 
