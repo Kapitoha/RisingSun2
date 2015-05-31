@@ -42,7 +42,7 @@
 										<td>${ user.name }</td>
 										<td>${ user.login }</td>
 										<td>${ user.status }</td>
-										<td class="center"><form action="admin-user-edit" method="post">
+										<td align="center" class="col-lg-1"><form action="admin-user-edit" method="post">
 											<input type="hidden" name="id" value="${ user.id }"> 
 											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 											<input type="submit" value="Edit">

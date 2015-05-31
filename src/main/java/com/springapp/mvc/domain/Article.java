@@ -1,10 +1,10 @@
 package com.springapp.mvc.domain;
 
-import java.nio.charset.Charset;
-import java.util.Date;
-import java.util.List;
+import com.springapp.mvc.repository.ArticleManager;
 
 import javax.persistence.*;
+import java.nio.charset.Charset;
+import java.util.*;
 
 /**
  * @author kapitoha
@@ -12,30 +12,28 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "articles_all")
-public class Article extends BaseEntity {
+public class Article implements BaseEntity {
     @Id
     @GeneratedValue
     @Column(nullable = false, unique = true, length = 11)
     private int id;
-    @Column(nullable=false)
+    @Column(nullable=false, length=255)
     private String title;
     @Lob
     private byte[] content;
     @ManyToOne
     private UsersEntity author;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
-//    @JoinTable(name = "main_page", joinColumns={@JoinColumn(name="article_id")})
-    @OneToOne(mappedBy="article", cascade=CascadeType.ALL)
+    @OneToOne(mappedBy = "article", cascade=CascadeType.ALL, orphanRemoval=true)
     private FirstPage firstPage;
-//    @JoinTable(name = "archive", joinColumns={@JoinColumn(name="article_id")})
-//    @OneToOne
-//    private Archive archive;
-    @ManyToMany
+    @OneToOne(mappedBy="article", cascade=CascadeType.ALL)
+    private Archive archive;
+    @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(name = "article_tags", 
     joinColumns = { @JoinColumn(name = "article_id") }, 
     inverseJoinColumns = { @JoinColumn(name = "tag_id") })
-    private List<TagsEntity> tagList;
+    private Set<TagsEntity> tagList = Collections.emptySet();
 
     public int getId()
     {
@@ -104,28 +102,135 @@ public class Article extends BaseEntity {
 	this.firstPage = firstPage;
     }
 
-    public List<TagsEntity> getTagList()
+    public Set<TagsEntity> getTagList()
     {
 	return tagList;
     }
 
-    public void setTagList(List<TagsEntity> tagList)
+    public void setTagList(Set<TagsEntity> tagList)
     {
 	this.tagList = tagList;
     }
+    
+    /**
+     * Parse tags from a single string
+     */
+    public void parseAndSetTags(String string, ArticleManager manager)
+    {
+	tagList.clear();
+	if (null != string && !string.isEmpty())
+	{
+	    if (null == tagList || tagList.isEmpty())
+		tagList = new HashSet<>();
+	    HashSet<TagsEntity> set = new HashSet<>(tagList);
+	    String[] tags = string.trim().replaceAll("\\s{2,}", " ").split("(\\s+)|(\\s*,s*)|(,+)");
+	    for (String tag : tags)
+	    {
+		if (!tag.isEmpty())
+		{
+		    TagsEntity tagsEntity = manager.getTagsManager().getTag(tag);
+		    if (null == tagsEntity)
+			set.add(new TagsEntity(tag));
+		    else
+			set.add(tagsEntity);
+		}
+	    }
+	    tagList.addAll(set);
+	}
+    }
+    /**
+     * This method converts whole tag-list into single string
+     * @return String
+     */
+    public String convertTagsToString()
+    {
+	StringBuilder sb = new StringBuilder();
+	if (null != tagList && !tagList.isEmpty())
+	{
+	    int count = 0;
+	    for (TagsEntity tagsEntity : tagList)
+	    {
+		sb.append(tagsEntity.getName());
+		if (++count != tagList.size())
+		    sb.append(", ");
+	    }
+	}
+	return sb.toString();
+    }
 
-//    public Archive getArchive()
-//    {
-//	return archive;
-//    }
-//
-//    public void setArchive(Archive archive)
-//    {
-//	this.archive = archive;
-//    }
+    public Archive getArchive()
+    {
+	return archive;
+    }
+
+    public void setArchive(Archive archive)
+    {
+	this.archive = archive;
+    }
     
     public String getContentText()
     {
 	return (content != null && content.length > 0)? new String(getContent(), Charset.forName("UTF-8")): "";
     }
+
+    @Override
+    public int hashCode()
+    {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((author == null) ? 0 : author.hashCode());
+	result = prime * result + Arrays.hashCode(content);
+	result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
+	result = prime * result + id;
+	result = prime * result + ((tagList == null) ? 0 : tagList.hashCode());
+	result = prime * result + ((title == null) ? 0 : title.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Article other = (Article) obj;
+	if (author == null)
+	{
+	    if (other.author != null)
+		return false;
+	}
+	else if (!author.equals(other.author))
+	    return false;
+	if (!Arrays.equals(content, other.content))
+	    return false;
+	if (creationDate == null)
+	{
+	    if (other.creationDate != null)
+		return false;
+	}
+	else if (!creationDate.equals(other.creationDate))
+	    return false;
+	if (id != other.id)
+	    return false;
+	if (tagList == null)
+	{
+	    if (other.tagList != null)
+		return false;
+	}
+	else if (!tagList.equals(other.tagList))
+	    return false;
+	if (title == null)
+	{
+	    if (other.title != null)
+		return false;
+	}
+	else if (!title.equals(other.title))
+	    return false;
+	return true;
+    }
+    
+    
 }

@@ -8,18 +8,36 @@
 	<security:global-method-security pre-post-annotations="enabled" />
 	<security:http auto-config="false" use-expressions="true">
 	    <security:csrf />
-	    <security:intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+	    <security:intercept-url pattern="/login*" access="permitAll"/>
 	    <security:intercept-url pattern="/admin*" access="isAuthenticated()"/>
 	    <security:intercept-url pattern="/logout" access="permitAll" />
 	    <security:intercept-url pattern="/accessdenied" access="permitAll" />
 	    <security:form-login />
 	    <security:logout logout-success-url="/index"/>
 	</security:http>
+<!-- 	<security:authentication-manager> -->
+<!-- 	    <security:authentication-provider> -->
+<!-- 	        <security:user-service> -->
+<!-- 	            <security:user name="Anton" password="qwe" authorities="Admin, User"/> -->
+<!-- 	        </security:user-service> -->
+<!-- 	    </security:authentication-provider> -->
+<!-- 	</security:authentication-manager> -->
+	
+	<bean id="daoAuthenticationProvider"
+	class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+	    <property name="userDetailsService" ref="userDetailsService" />
+	</bean>
+	<bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+	    <constructor-arg name="providers">
+	        <list>
+	            <ref bean="daoAuthenticationProvider"/>
+	        </list>
+	    </constructor-arg>
+	</bean>
+	
 	<security:authentication-manager>
-	    <security:authentication-provider>
-	        <security:user-service>
-	            <security:user name="Anton" password="qwe" authorities="Admin, User"/>
-	        </security:user-service>
+	    <security:authentication-provider user-service-ref="userDetailsService">
+<!-- 	        <security:password-encoder hash="bcrypt"></security:password-encoder> -->
 	    </security:authentication-provider>
 	</security:authentication-manager>
 

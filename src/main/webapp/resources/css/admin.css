@@ -1,0 +1,26 @@
+.panel-heading #article_view_author {
+	position: relative;
+}
+.panel-heading #article_view_date {
+	position: relative;
+	float: right;
+}
+.panel-body H2 {
+	margin: 10px;
+	padding-bottom: 20px;
+	text-align: center;
+}
+.panel-footer {
+	height: 50px;
+}
+.panel-footer #tags {
+	position: relative;
+	float: left;
+}
+.panel-footer #btns {
+	position: relative;
+	float: right;
+}
+#article_print_head th {
+	text-align: center;
+}

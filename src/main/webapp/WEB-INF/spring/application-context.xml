@@ -13,10 +13,8 @@
        http://www.springframework.org/schema/cache/spring-cache.xsd ">
 
        <context:property-placeholder location="classpath:jdbc.properties" system-properties-mode="ENVIRONMENT"/>
-<!--        <context:component-scan base-package="com.springapp.mvc.repository"/> -->
        <context:component-scan base-package="com.springapp.mvc"/>
-
-       <tx:annotation-driven transaction-manager="transactionManager"/>
+       <context:annotation-config />
 
        <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
               <property name="sessionFactory" ref="sessionFactory">
@@ -44,7 +42,7 @@
                      </props>
               </property>
        </bean>
-<!--        <bean id="dmngr" class="com.springapp.mvc.dao.DAOmngr">
-			<property name="sessionFactory" ref="sessionFactory"/>           
-       </bean> -->
+
+       <tx:annotation-driven transaction-manager="transactionManager"/>
+
 </beans>

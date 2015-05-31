@@ -11,7 +11,7 @@ import org.hibernate.annotations.Parameter;
  */
 @Entity
 @Table(name="archive")
-public class Archive {
+public class Archive implements BaseEntity {
     @GenericGenerator(name="generator", strategy="foreign", parameters=@Parameter(name="property", value = "article"))
     @Id
     @GeneratedValue(generator="generator")

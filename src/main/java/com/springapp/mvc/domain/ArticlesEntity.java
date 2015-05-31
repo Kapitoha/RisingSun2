@@ -9,7 +9,7 @@ import java.util.Collection;
  */
 @Entity
 @Table(name = "articles")
-public class ArticlesEntity extends BaseEntity {
+public class ArticlesEntity implements BaseEntity {
     private int id;
     private String title;
     private String article;

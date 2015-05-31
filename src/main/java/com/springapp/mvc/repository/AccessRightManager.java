@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.springapp.mvc.dao.DAOmngr;
+import com.springapp.mvc.dao.DAOManager;
 import com.springapp.mvc.domain.AccessRight;
 
 /**
@@ -18,12 +18,12 @@ import com.springapp.mvc.domain.AccessRight;
 @Repository
 @Transactional
 public class AccessRightManager {
-    private DAOmngr manager;
-    public DAOmngr getManager()
+    @Autowired
+    private SessionFactory sessionFactory;
+    private DAOManager manager;
+    public DAOManager getManager()
     {
-	if (manager == null)
-	    manager = new DAOmngr();
-	return manager;
+	return manager != null? manager : new DAOManager(sessionFactory);
     }
     
     public List<AccessRight> getAccessRightsList()
@@ -44,6 +44,7 @@ public class AccessRightManager {
 	    String[] rights = new String("EDIT_USER,"
 	    	+ "EDIT_ARTICLE_MASTER,"
 		+ "DELETE_ARTICLE_MASTER,"
+		+ "MANAGE_FIRST_PAGE,"
 	    	+ "EDIT_ARTICLE_AUTHOR,"
 	    	+ "DELETE_ARTICLE_AUTHOR,"
 	    	+ "CREATE_ARTICLE")

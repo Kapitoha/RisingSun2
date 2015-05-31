@@ -1,6 +1,6 @@
 package com.springapp.mvc.repository;
 
-import com.springapp.mvc.dao.DAOmngr;
+import com.springapp.mvc.dao.DAOManager;
 import com.springapp.mvc.domain.ArticlesEntity;
 
 import org.hibernate.SessionFactory;
@@ -25,17 +25,17 @@ public class ArticlesRepository {
     private SessionFactory sessionFactory;
 
     public boolean addArticle(ArticlesEntity arcticlesEntity){
-        return new DAOmngr(sessionFactory).saveInstance(arcticlesEntity);
+        return new DAOManager(sessionFactory).saveInstance(arcticlesEntity);
     }
 
 
 
     public List<ArticlesEntity> listAll(){
-        return new DAOmngr(sessionFactory).getInstanceList(ArticlesEntity.class);
+        return new DAOManager(sessionFactory).getInstanceList(ArticlesEntity.class);
     }
 
     public List<ArticlesEntity> newsSearch(String name){
-        return new DAOmngr(sessionFactory).getInstanceList(ArticlesEntity.class, Order.asc("DateCreate"), Restrictions.like("Article", name));
+        return new DAOManager(sessionFactory).getInstanceList(ArticlesEntity.class, Order.asc("DateCreate"), Restrictions.like("Article", name));
 //        return this.sessionFactory.getCurrentSession().createSQLQuery("SELECT * FROM articles WHERE articles.Article LIKE :name order by DateCreate").addEntity(ArticlesEntity.class).setString("name", name).list();
     }
 
@@ -63,7 +63,7 @@ public class ArticlesRepository {
     }
 
     public void removeArticle(Integer id){
-	new DAOmngr(sessionFactory).deleteInstance(id, ArticlesEntity.class);
+	new DAOManager(sessionFactory).deleteInstance(id, ArticlesEntity.class);
         }
 }
 

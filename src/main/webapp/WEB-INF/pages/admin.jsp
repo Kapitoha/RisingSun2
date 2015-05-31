@@ -37,6 +37,9 @@
 				<c:when test="${p_tag eq 'articles_edit'}">
 					<%@include file="jspf/a-article-edit.jsp"%>
 				</c:when>
+				<c:when test="${p_tag eq 'article_view'}">
+					<%@include file="jspf/a-article-view.jsp"%>
+				</c:when>
 			</c:choose>
 		</div>
 		<!-- /#page-wrapper -->

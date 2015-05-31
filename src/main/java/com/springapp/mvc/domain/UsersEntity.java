@@ -5,24 +5,22 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Alex on 30.04.2015.
  */
 @Entity
 @Table(name = "users")
-public class UsersEntity extends BaseEntity {
+public class UsersEntity implements BaseEntity {
     private int id;
     private String name;
     private String login;
     private String password;
     private Status status;
     private Collection<ArticlesEntity> articlesById = Collections.emptyList();
-//    @Transient
-//    private Collection<UsersrulesEntity> usersrulesById = Collections.emptyList();
-    
 
-    private List<AccessRight> accessList = Collections.emptyList();
+    private Set<AccessRight> accessList = Collections.emptySet();
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true)
@@ -120,12 +118,12 @@ public class UsersEntity extends BaseEntity {
     @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(name="users_rights")
     @Column(name="access_right_id")
-    public List<AccessRight> getAccessList()
+    public Set<AccessRight> getAccessList()
     {
-	return accessList;
+	    return accessList;
     }
 
-    public void setAccessList(List<AccessRight> accessList)
+    public void setAccessList(Set<AccessRight> accessList)
     {
 	this.accessList = accessList;
     }

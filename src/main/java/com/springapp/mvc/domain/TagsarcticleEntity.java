@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "tagsarcticle")
-public class TagsarcticleEntity extends BaseEntity {
+public class TagsarcticleEntity implements BaseEntity {
     private int id;
     private ArticlesEntity articlesByIdArcticle;
     private TagsEntity tagsByIdTeg;

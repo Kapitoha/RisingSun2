@@ -34,38 +34,24 @@
 				<label for="status">Status </label> <select name="status"
 					class="form-group">
 					<c:forEach var="status_elem" items="${ status_list }">
-						<c:choose>
-							<c:when test="${ user_obj.status eq status_elem }">
-								<option selected value="${ status_elem }"><c:out
-										value="${ status_elem }"></c:out></option>
-							</c:when>
-							<c:otherwise>
-								<option value="${ status_elem }"><c:out
-										value="${ status_elem }"></c:out></option>
-							</c:otherwise>
-						</c:choose>
+						<option ${ user_obj.status eq status_elem? 'selected' : '' }
+							value="${ status_elem }">
+							<c:out value="${ status_elem }"></c:out>
+						</option>
 					</c:forEach>
 				</select>
-				<%-- 				<input type="text" value="${user_obj.status }" name="status" class="form-control" placeholder="Enter status..." maxlength="24"> --%>
 			</div>
 		</div>
-		<div class="col-lg-3">
+		<div class="col-lg-4">
 			<!-- Rules list -->
 			<label>Access rights:</label>
 			<ul>
 				<c:set var="field" value="id" />
 				<c:forEach var="rule" items="${ rules_list }">
-					<c:choose>
-						<c:when
-							test="${ coll:containsByField(userRightsList, field, rule.id) }">
-							<li><input name="access_right" type="checkbox"
-								value="${ rule.id }" checked>${ rule.description }</li>
-						</c:when>
-						<c:otherwise>
-							<li><input name="access_right" type="checkbox"
-								value="${ rule.id }">${ rule.description }</li>
-						</c:otherwise>
-					</c:choose>
+					<li><input name="access_right" type="checkbox"
+						value="${ rule.id }"
+						${ coll:containsByField(userRightsList, field, rule.id)? 'checked' : '' }>${ rule.description }
+					</li>
 
 				</c:forEach>
 			</ul>

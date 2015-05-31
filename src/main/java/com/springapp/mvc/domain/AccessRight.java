@@ -8,7 +8,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="access_rights")
-public class AccessRight extends BaseEntity {
+public class AccessRight implements BaseEntity {
     @Id
     @GeneratedValue
     @Column(nullable=false, unique= true, length=11)

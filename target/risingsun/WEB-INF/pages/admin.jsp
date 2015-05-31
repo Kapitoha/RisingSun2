@@ -1,113 +1,77 @@
 <%--
-  Created by IntelliJ IDEA.
   User: kapitoha
-  Date: 06.05.15
-  Time: 0:09
-  To change this template use File | Settings | File Templates.
+  Date: 22.05.15
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<html>
-<head>
-<title>Admin panel</title>
-<style>
-.menu ul {
-	margin: 0;
-	list-style: none;
-	padding-left: 20px;
-	display: none;
-}
+<%@ taglib prefix="coll" uri="/WEB-INF/tag/collection_utils.tld"%>
 
-.menu .title {
-	font-size: 18px;
-	cursor: pointer;
-}
+<!DOCTYPE html>
+<html lang="en">
+<!-- Import head -->
+<c:import url="jspf/admin-head.jsp"></c:import>
 
-.menu .title::before {
-	content: '▶ ';
-	font-size: 80%;
-	color: green;
-}
-
-.menu.open .title::before {
-	content: '▼ ';
-}
-
-.menu.open ul {
-	display: block;
-}
-</style>
-</head>
 <body>
-	<div id="menu_panel">
-		<script type="text/javascript">
-			function show(elementId) {
-				var menuElem = document.getElementById(elementId);
-				var titleElem = menuElem.querySelector('.title');
-				titleElem.onclick = function() {
-					menuElem.classList.toggle('open');
-				}
-			}
-		</script>
-		<div id="admin-actions-user" class="menu">
-			<span class="title">Manage Users</span>
-			<ul>
-				<li>
-					<div class="user-actions-item">
-						<a href="admin-users">Print Users</a>
-					</div>
-				</li>
-				<li>
-					<div class="user-actions-item">
-						<a href="admin-user-create">Create User</a>
-					</div>
-				</li>
-			</ul>
-		</div>
-		<div id="admin-actions-article" class="menu">
-			<span class="title">Manage Articles</span>
-			<ul>
-				<li>
-					<div class="user-actions-item">
-						<a href="admin-articles-print">Print all articles</a>
-					</div>
-				</li>
-				<li>
-					<div class="user-actions-item">
-						<a href="admin-articles-first">Print first page</a>
-					</div>
-				</li>
-				<li>
-					<div class="user-actions-item">
-						<a href="admin-articles-create">Create article</a>
-					</div>
-				</li>
-			</ul>
-		</div>
-		<script type="text/javascript">
-			show('admin-actions-user');
-			show('admin-actions-article');
-		</script>
-	</div>
 
-	<div id="content">
-		<p class="info_msg">${ info_msg }</p>
-		<p class="error_msg">${ error_msg }</p>
-		<c:set var="p_tag" value="${ page_tag }" />
-		<c:choose>
-			<c:when test="${p_tag eq 'users_show'}">
-				<%@include file="jspf/a-user-print.jsp"%>
-			</c:when>
-			<c:when test="${p_tag eq 'user-edit'}">
-				<%@include file="jspf/a-user-edit.jsp"%>
-			</c:when>
-			<c:when test="${p_tag eq 'articles_print'}">
-				<%@include file="jspf/a-article-print.jsp" %>
-			</c:when>
-		</c:choose>
+	<div id="wrapper">
+
+		<!-- Navigation -->
+		<%@include file="jspf/admin-navbar.jsp"%>
+
+		<!-- Page Content -->
+		<div id="page-wrapper">
+			<p class="info_msg">${ info_msg }</p>
+			<p class="error_msg">${ error_msg }</p>
+			<c:set var="p_tag" value="${ page_tag }" />
+			<c:choose>
+				<c:when test="${p_tag eq 'users_show'}">
+					<%@include file="jspf/a-users-print.jsp"%>
+				</c:when>
+				<c:when test="${p_tag eq 'user-edit'}">
+					<%@include file="jspf/a-user-edit.jsp"%>
+				</c:when>
+				<c:when test="${p_tag eq 'articles_print'}">
+					<%@include file="jspf/a-article-print.jsp"%>
+				</c:when>
+				<c:when test="${p_tag eq 'articles_edit'}">
+					<%@include file="jspf/a-article-edit.jsp"%>
+				</c:when>
+				<c:when test="${p_tag eq 'article_view'}">
+					<%@include file="jspf/a-article-view.jsp"%>
+				</c:when>
+			</c:choose>
+		</div>
+		<!-- /#page-wrapper -->
+
 	</div>
+	<!-- /#wrapper -->
+
+	<!-- jQuery -->
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+
+	<!-- Bootstrap Core JavaScript -->
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+	<!-- Metis Menu Plugin JavaScript -->
+	<script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
+	
+	<!-- DataTables JavaScript -->
+    <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+	<!-- Custom Theme JavaScript -->
+	<script src="js/sb-admin-2.js"></script>
+	
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+                responsive: true
+        });
+    });
+    </script>
 
 </body>
+
 </html>

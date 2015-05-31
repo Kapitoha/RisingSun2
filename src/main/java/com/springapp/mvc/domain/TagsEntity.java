@@ -1,5 +1,8 @@
 package com.springapp.mvc.domain;
 
+import java.util.Collections;
+import java.util.Set;
+
 import javax.persistence.*;
 
 /**
@@ -7,14 +10,25 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "tags")
-public class TagsEntity extends BaseEntity {
-    private int id;
-    private String name;
-//    private Collection<TagsarcticleEntity> tagsarcticlesById;
-
+public class TagsEntity implements BaseEntity {
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = true)
+    @Column(unique=true, nullable = false, insertable = true, updatable = true)
     @GeneratedValue
+    private int id;
+    @Basic
+    @Column(unique=true, nullable = false, insertable = true, updatable = true, length = 255)
+    private String name;
+    @ManyToMany(mappedBy="tagList", fetch=FetchType.EAGER)
+    private Set<Article> articles = Collections.emptySet();
+    
+    public TagsEntity()
+    {}
+
+    public TagsEntity(String name)
+    {
+	this.name = name;
+    }
+
     public int getId() {
         return id;
     }
@@ -23,8 +37,7 @@ public class TagsEntity extends BaseEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "Name", nullable = false, insertable = true, updatable = true, length = 1500)
+
     public String getName() {
         return name;
     }
@@ -33,32 +46,51 @@ public class TagsEntity extends BaseEntity {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public Set<Article> getArticles()
+    {
+	return articles;
+    }
 
-        TagsEntity that = (TagsEntity) o;
-
-        if (id != that.id) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-
-        return true;
+    public void setArticles(Set<Article> articles)
+    {
+	this.articles = articles;
     }
 
     @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
+    public int hashCode()
+    {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((name == null) ? 0 : name.hashCode());
+	return result;
     }
 
-//    @OneToMany(mappedBy = "tagsByIdTeg")
-//    public Collection<TagsarcticleEntity> getTagsarcticlesById() {
-//        return tagsarcticlesById;
-//    }
-//
-//    public void setTagsarcticlesById(Collection<TagsarcticleEntity> tagsarcticlesById) {
-//        this.tagsarcticlesById = tagsarcticlesById;
-//    }
+    @Override
+    public boolean equals(Object obj)
+    {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	TagsEntity other = (TagsEntity) obj;
+	if (name == null)
+	{
+	    if (other.name != null)
+		return false;
+	}
+	else if (!name.equals(other.name))
+	    return false;
+	return true;
+    }
+
+    @Override
+    public String toString()
+    {
+	return "TagsEntity [id=" + id + ", name=" + name + ", articles count: " + articles.size() + "]";
+    }
+    
+    
+    
 }

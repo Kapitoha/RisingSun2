@@ -8,8 +8,9 @@
 <%@ taglib prefix="coll" uri="/WEB-INF/tag/collection_utils.tld"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
-<sec:authorize
-	access="hasAnyRole('EDIT_ARTICLE_MASTER', 'EDIT_ARTICLE_AUTHOR')">
+<%-- <sec:authorize --%>
+<%-- 	access="hasAnyRole('EDIT_ARTICLE_MASTER', 'EDIT_ARTICLE_AUTHOR')"> --%>
+<%-- </sec:authorize> --%>
 	<script src="ckeditor/ckeditor.js"></script>
 	<c:set var="article" value="${ article_obj }"></c:set>
 	<div class="row">
@@ -27,19 +28,15 @@
 					<script type="text/javascript">
 						CKEDITOR.replace('editor');
 					</script>
-					<c:choose>
-						<c:when test="${ empty first_page }">
-							<p>
-								<input type="checkbox" name="show_main" />Show on first page
-							</p>
-						</c:when>
-						<c:otherwise>
-							<p>
-								<input type="checkbox" name="show_main" checked />Show on first
-								page
-							</p>
-						</c:otherwise>
-					</c:choose>
+					<label for="tags">Tags (input through the space or comma)</label><br> <input type="text"
+							name="tags" class="form-control" value="${ article.convertTagsToString() }"
+							maxlength="255">
+					<p><input type="checkbox" name="show_main" ${ not empty article.firstPage? 'checked' : '' } />Is on
+						first page
+					<input type="checkbox" name="featured" ${ not empty article.firstPage &&
+						article.firstPage.featured? 'checked' : '' }	/> Is featured</p>
+					<input type="checkbox" name="archived" ${ not empty article.archive? 'checked' : '' } />Is Archived</p>
+					<input type="hidden" name="id" value="${ article.id }">
 					<input type="hidden" name="${_csrf.parameterName}"
 						value="${_csrf.token}" />
 					<div>
@@ -49,4 +46,3 @@
 			</div>
 		</div>
 	</div>
-</sec:authorize>
