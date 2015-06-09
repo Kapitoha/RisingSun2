@@ -4,8 +4,8 @@ import com.springapp.mvc.domain.*;
 import com.springapp.mvc.repository.AccessRightManager;
 import com.springapp.mvc.repository.ArticleManager;
 import com.springapp.mvc.repository.UserRepository;
-import com.springapp.mvc.utils.Exceptions;
 import com.springapp.mvc.utils.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +20,8 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.*;
 
@@ -32,9 +34,12 @@ public class AdminController {
     private static final int SAVE = 1;
     private static final int UPDATE = 2;
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    @Autowired private UserRepository userRepository;
-    @Autowired private AccessRightManager accessManger;
-    @Autowired private ArticleManager articleManager;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private AccessRightManager accessManger;
+    @Autowired
+    private ArticleManager articleManager;
 
     @RequestMapping(value = "/admin")
     public ModelAndView showAdmin()
@@ -56,12 +61,12 @@ public class AdminController {
 
     @PreAuthorize("hasRole('EDIT_USER')")
     @RequestMapping(value = "/admin-user-edit", method = RequestMethod.POST)
-    public ModelAndView editUser(@ModelAttribute(value = "user") UsersEntity user, HttpServletRequest request)
+    public ModelAndView editUser(@ModelAttribute(value = "user") UsersEntity user,
+	    HttpServletRequest request)
     {
-	if (!isMatchesAccessRights("EDIT_USER"))
+	if (!isMatchesAccessRights(Right.EDIT_USER.toString()))
 	{
-	    new Exceptions.AccessDeniedException();
-	    return new ModelAndView(new RedirectView("accessdenied"));
+	    return accessDenied();
 	}
 	ModelAndView view = new ModelAndView();
 	view.setViewName("/admin");
@@ -87,7 +92,6 @@ public class AdminController {
 	return view;
     }
 
-    @PreAuthorize("hasRole('EDIT_USER')")
     @RequestMapping(value = "/admin-user-create")
     public ModelAndView createUser(HttpServletRequest request)
     {
@@ -96,11 +100,11 @@ public class AdminController {
 
     @PreAuthorize("hasRole('EDIT_USER')")
     @RequestMapping(value = "/admin-user-save", method = RequestMethod.POST)
-    public ModelAndView saveUser(@ModelAttribute("user") UsersEntity user, HttpServletRequest request,
-		    RedirectAttributes attr)
+    public ModelAndView saveUser(@ModelAttribute("user") UsersEntity user,
+	    HttpServletRequest request, RedirectAttributes attr)
     {
-	if (!isMatchesAccessRights("EDIT_USER"))
-	    return new ModelAndView(new RedirectView("accessdenied"));
+	if (!isMatchesAccessRights(Right.EDIT_USER.toString()))
+	    return accessDenied();
 	UsersEntity userInstance = user;
 	Status status = Status.valueOf(request.getParameter("status"));
 	if (null == userInstance)
@@ -110,20 +114,24 @@ public class AdminController {
 	}
 
 	/*
-     * Check fields
+	 * Check fields
 	 */
 	if (!StringUtils.checkIfAllowed(userInstance.getName()))
 	{
-	    request.setAttribute("error_msg",
-			    String.format("Allowed only <strong><em>%s</em></strong> characters in 'Name' field",
-					    StringUtils.FIELD_NAME_PATTERN));
+	    request.setAttribute(
+		    "error_msg",
+		    String.format(
+			    "Allowed only <strong><em>%s</em></strong> characters in 'Name' field",
+			    StringUtils.FIELD_NAME_PATTERN));
 	    return editUser(userInstance, request);
 	}
 	if (!StringUtils.checkIfAllowed(userInstance.getLogin()))
 	{
-	    request.setAttribute("error_msg",
-			    String.format("Allowed only <strong><em>%s</em></strong> characters in 'login' field",
-					    StringUtils.FIELD_NAME_PATTERN));
+	    request.setAttribute(
+		    "error_msg",
+		    String.format(
+			    "Allowed only <strong><em>%s</em></strong> characters in 'login' field",
+			    StringUtils.FIELD_NAME_PATTERN));
 	    return editUser(userInstance, request);
 	}
 	// read access rights
@@ -155,7 +163,8 @@ public class AdminController {
 	 */
 	String result_msg = null;
 	int action = 0;
-	List<UsersEntity> existedUsersList = userRepository.getUsersByFields(userInstance);
+	List<UsersEntity> existedUsersList = userRepository
+		.getUsersByFields(userInstance);
 	if (null == existedUsersList || existedUsersList.isEmpty())
 	{
 	    // save
@@ -166,17 +175,20 @@ public class AdminController {
 	    // check for duplicates
 	    for (UsersEntity existedUser : existedUsersList)
 	    {
-		if (existedUser.getName().equals(userInstance.getName()) && existedUser.getId() != userInstance.getId())
+		if (existedUser.getName().equals(userInstance.getName())
+			&& existedUser.getId() != userInstance.getId())
 		{
 		    // same name
-		    request.setAttribute("error_msg", "This Name is already presented. Choose other please.");
+		    request.setAttribute("error_msg",
+			    "This Name is already presented. Choose other please.");
 		    return editUser(userInstance, request);
 		}
-		if (existedUser.getLogin().equals(userInstance.getLogin()) && existedUser.getId() != userInstance
-				.getId())
+		if (existedUser.getLogin().equals(userInstance.getLogin())
+			&& existedUser.getId() != userInstance.getId())
 		{
 		    // same login
-		    request.setAttribute("error_msg", "This Login is already presented. Choose other please.");
+		    request.setAttribute("error_msg",
+			    "This Login is already presented. Choose other please.");
 		    return editUser(userInstance, request);
 		}
 	    }
@@ -236,61 +248,68 @@ public class AdminController {
 
     @PreAuthorize("hasAnyRole('EDIT_ARTICLE_MASTER', 'EDIT_ARTICLE_AUTHOR')")
     @RequestMapping("/admin-article-edit")
-    public ModelAndView editArticle(@ModelAttribute Article article, HttpServletRequest request)
+    public ModelAndView editArticle(@ModelAttribute Article article,
+	    HttpServletRequest request) throws UnsupportedEncodingException
     {
-	if (!isMatchesAccessRights("EDIT_ARTICLE_MASTER"))
+	if (!isMatchesAccessRights(Right.EDIT_ARTICLE_MASTER.toString()))
 	{
 	    Principal userPrincipal = request.getUserPrincipal();
-	    if (isMatchesAccessRights("EDIT_ARTICLE_AUTHOR") && !userPrincipal.getName()
-			    .equals(article.getAuthor().getLogin()))
+	    if (isMatchesAccessRights(Right.EDIT_ARTICLE_AUTHOR.toString())
+		    && !userPrincipal.getName().equals(article.getAuthor().getLogin()))
 	    {
-		new Exceptions.AccessDeniedException();
+		return accessDenied();
 	    }
 
 	}
 	return manageArticle(article, request);
     }
 
-    private ModelAndView manageArticle(@ModelAttribute Article article, HttpServletRequest request)
+    private ModelAndView manageArticle(@ModelAttribute Article article,
+	    HttpServletRequest request) throws UnsupportedEncodingException
     {
-	Article art = article.getId() > 0 ? articleManager.getArticle(article.getId()) : article;
+	request.setCharacterEncoding("UTF-8");
+	Article art = article.getId() > 0 ? articleManager.getArticle(article.getId())
+		: article;
 	ModelAndView view = new ModelAndView("/admin");
 	// FirstPage firstPage = articleManager.getFirstPage(article);
 	view.addObject("page_tag", "articles_edit");
 	view.addObject("article_obj", art);
-	view.addObject("first_page", null != art && art.getFirstPage() != null ? art.getFirstPage() : null);
+	view.addObject("first_page",
+		null != art && art.getFirstPage() != null ? art.getFirstPage() : null);
 	return view;
 
     }
 
     @PreAuthorize("hasRole('CREATE_ARTICLE')")
     @RequestMapping("/admin-article-create")
-    public ModelAndView createArticle(HttpServletRequest request)
+    public ModelAndView createArticle(HttpServletRequest request) throws UnsupportedEncodingException
     {
-	if (!isMatchesAccessRights("CREATE_ARTICLE"))
-	    new Exceptions.AccessDeniedException();
+	if (!isMatchesAccessRights(Right.CREATE_ARTICLE.toString()))
+	    return accessDenied();
 	return manageArticle(new Article(), request);
     }
 
     @PreAuthorize("hasAnyRole('DELETE_ARTICLE_MASTER', 'DELETE_ARTICLE_AUTHOR')")
     @RequestMapping("/admin-article-delete")
-    public ModelAndView deleteArticle(@ModelAttribute Article article, HttpServletRequest request,
-		    RedirectAttributes attributes)
+    public ModelAndView deleteArticle(@ModelAttribute Article article,
+	    HttpServletRequest request, RedirectAttributes attributes)
     {
-	if (!isMatchesAccessRights("DELETE_ARTICLE_MASTER"))
+	if (!isMatchesAccessRights(Right.DELETE_ARTICLE_MASTER.toString()))
 	{
 	    Principal userPrincipal = request.getUserPrincipal();
-	    if (isMatchesAccessRights("DELETE_ARTICLE_AUTHOR") && !userPrincipal.getName()
-			    .equals(article.getAuthor().getLogin()))
+	    if (isMatchesAccessRights(Right.DELETE_ARTICLE_AUTHOR.toString())
+		    && !userPrincipal.getName().equals(article.getAuthor().getLogin()))
 	    {
-		new Exceptions.AccessDeniedException();
+		return accessDenied(); 
 	    }
 
 	}
+	articleManager.getTagsManager().removeAllArticleTagsDirectly(article);
+	article.getTagList().clear();
 	if (articleManager.deleteArticle(article))
 	{
-	    attributes.addFlashAttribute("info_msg",
-			    String.format("Article '%s' deleted successfully", article.getTitle()));
+	    attributes.addFlashAttribute("info_msg", String.format(
+		    "Article '%s' deleted successfully", article.getTitle()));
 	}
 	else
 	    attributes.addFlashAttribute("error_msg", "Deletion was failed");
@@ -298,23 +317,27 @@ public class AdminController {
     }
 
     @PreAuthorize("hasRole('CREATE_ARTICLE')")
-    @RequestMapping("/admin-article-save")
-    public ModelAndView saveArticle(@ModelAttribute Article articleInstance, HttpServletRequest request,
-		    RedirectAttributes attributes)
+    @RequestMapping(value="/admin-article-save", method=RequestMethod.POST)
+    public ModelAndView saveArticle(@ModelAttribute Article articleInstance,
+	    HttpServletRequest request, RedirectAttributes attributes) throws UnsupportedEncodingException
     {
+	request.setCharacterEncoding("UTF-8");
 	int action = 0;
 	String msg = null;
-	boolean isOnFirstPage = request.getParameter("show_main") != null;
+	boolean isArchived = request.getParameter("archived") != null;
+	boolean isOnFirstPage = request.getParameter("show_main") != null && !isArchived;
 	boolean isFeatured = request.getParameter("featured") != null;
 	String tags = request.getParameter("tags");
-	Article article = articleInstance.getId() > 0 ?
-			articleManager.getArticle(articleInstance.getId()) :
-			articleInstance;
+	Article article = articleInstance.getId() > 0 ? articleManager
+		.getArticle(articleInstance.getId()) : articleInstance;
 	String content = request.getParameter("editor");
-	article.setContent(content);
-	article.setAuthor(userRepository.getUser(request.getUserPrincipal().getName()));
-	article.parseAndSetTags(tags, articleManager);
-	//First page handler
+	article.setTitle(request.getParameter("title"));
+	article.setContent(StringUtils.decodeString(content));
+	article.setAuthor(userRepository.getUser(StringUtils.decodeString(request
+		.getUserPrincipal().getName())));
+	article.setImageUrl(request.getParameter("image"));
+	article.parseAndSetTags(StringUtils.decodeString(tags), articleManager);
+	// First page handler
 	if (isOnFirstPage)
 	{
 	    if (article.getFirstPage() == null)
@@ -327,6 +350,19 @@ public class AdminController {
 	    {
 		articleManager.removeArticleFromFirstPageDirectly(article);
 		article.setFirstPage(null);
+	    }
+	}
+	//archive handler
+	if (isArchived)
+	{
+	    if (article.getArchive() == null) article.setArchive(new Archive(new Date()));
+	}
+	else
+	{
+	    if (article.getArchive() != null) 
+	    {
+		articleManager.deleteFromArchiveDirectly(article);
+		article.setArchive(null);
 	    }
 	}
 
@@ -363,7 +399,8 @@ public class AdminController {
     }
 
     @RequestMapping(value = "admin-article-view")
-    public ModelAndView viewArticle(@ModelAttribute Article article, HttpServletRequest request)
+    public ModelAndView viewArticle(@ModelAttribute Article article,
+	    HttpServletRequest request)
     {
 	ModelAndView view = new ModelAndView("/admin");
 	view.addObject("page_tag", "article_view");
@@ -430,7 +467,7 @@ public class AdminController {
     {
 	@SuppressWarnings("unchecked")
 	Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>) SecurityContextHolder
-			.getContext().getAuthentication().getAuthorities();
+		.getContext().getAuthentication().getAuthorities();
 	System.out.println(authorities);
 	for (String role : roles)
 	{
@@ -441,6 +478,11 @@ public class AdminController {
 	    }
 	}
 	return false;
+    }
+    
+    private ModelAndView accessDenied()
+    {
+	return new ModelAndView(new RedirectView("denied"));
     }
 
 }

@@ -1,8 +1,10 @@
 package com.springapp.mvc.domain;
 
 import com.springapp.mvc.repository.ArticleManager;
+import com.springapp.mvc.utils.StringUtils;
 
 import javax.persistence.*;
+
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -13,27 +15,41 @@ import java.util.*;
 @Entity
 @Table(name = "articles_all")
 public class Article implements BaseEntity {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue
     @Column(nullable = false, unique = true, length = 11)
     private int id;
+
     @Column(nullable=false, length=255)
     private String title;
+
     @Lob
     private byte[] content;
+
     @ManyToOne
     private UsersEntity author;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
+
     @OneToOne(mappedBy = "article", cascade=CascadeType.ALL, orphanRemoval=true)
     private FirstPage firstPage;
+
     @OneToOne(mappedBy="article", cascade=CascadeType.ALL)
     private Archive archive;
+
     @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(name = "article_tags", 
     joinColumns = { @JoinColumn(name = "article_id") }, 
     inverseJoinColumns = { @JoinColumn(name = "tag_id") })
     private Set<TagsEntity> tagList = Collections.emptySet();
+
+    @Column(name="image_url")
+    private String imageUrl;
 
     public int getId()
     {
@@ -68,7 +84,7 @@ public class Article implements BaseEntity {
     public void setContent(String content)
     {
 	if (content != null)
-	    this.content = content.getBytes();
+	    this.content = StringUtils.decodeString(content).getBytes();
     }
 
     public UsersEntity getAuthor()
@@ -123,7 +139,7 @@ public class Article implements BaseEntity {
 	    if (null == tagList || tagList.isEmpty())
 		tagList = new HashSet<>();
 	    HashSet<TagsEntity> set = new HashSet<>(tagList);
-	    String[] tags = string.trim().replaceAll("\\s{2,}", " ").split("(\\s+)|(\\s*,s*)|(,+)");
+	    String[] tags = string.toLowerCase().trim().replaceAll("\\s{2,}", " ").split("(\\s+)|(\\s*,s*)|(,+)");
 	    for (String tag : tags)
 	    {
 		if (!tag.isEmpty())
@@ -138,6 +154,7 @@ public class Article implements BaseEntity {
 	    tagList.addAll(set);
 	}
     }
+    
     /**
      * This method converts whole tag-list into single string
      * @return String
@@ -165,12 +182,29 @@ public class Article implements BaseEntity {
 
     public void setArchive(Archive archive)
     {
+	if (null != archive) archive.setArticle(this);
 	this.archive = archive;
     }
     
     public String getContentText()
     {
 	return (content != null && content.length > 0)? new String(getContent(), Charset.forName("UTF-8")): "";
+    }
+    
+    public String getContentText(boolean hidePictures)
+    {
+//	System.out.println(getContentText().re	placeAll("<img.+>", ""));
+	return hidePictures? getContentText().replaceAll("<img.+>", "") : getContentText();
+    }
+
+    public String getImageUrl()
+    {
+	return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl)
+    {
+	this.imageUrl = imageUrl;
     }
 
     @Override
@@ -231,6 +265,6 @@ public class Article implements BaseEntity {
 	    return false;
 	return true;
     }
-    
-    
+
+
 }

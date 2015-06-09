@@ -1,10 +1,10 @@
 package com.springapp.mvc.domain;
 
-import javax.persistence.*;
+import com.springapp.mvc.utils.StringUtils;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -13,18 +13,35 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class UsersEntity implements BaseEntity {
-    private int id;
-    private String name;
-    private String login;
-    private String password;
-    private Status status;
-    private Collection<ArticlesEntity> articlesById = Collections.emptyList();
-
-    private Set<AccessRight> accessList = Collections.emptySet();
-
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true)
     @GeneratedValue
+    private int id;
+    @Basic
+    @Column(name = "Name", nullable = false, insertable = true, updatable = true, length = 100)
+    private String name;
+    @Basic
+    @Column(name = "Login", nullable = false, insertable = true, updatable = true, length = 50)
+    private String login;
+    @Basic
+    @Column(name = "password", nullable = false, insertable = true, updatable = true, length = 50)
+    private String password;
+    @Basic
+    @Column(name = "status", nullable = false, insertable = true, updatable = true, length = 50)
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Collection<Article> articles = Collections.emptyList();
+    @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinTable(name="users_rights")
+    @Column(name="access_right_id")
+    private Set<AccessRight> accessList = Collections.emptySet();
+
+
     public int getId() {
         return id;
     }
@@ -33,39 +50,34 @@ public class UsersEntity implements BaseEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "Name", nullable = false, insertable = true, updatable = true, length = 100)
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = StringUtils.decodeString(name);
     }
 
-    @Basic
-    @Column(name = "Login", nullable = false, insertable = true, updatable = true, length = 50)
+
     public String getLogin() {
         return login;
     }
 
     public void setLogin(String login) {
-        this.login = login;
+        this.login = StringUtils.decodeString(login);
     }
-    @Basic
-    @Column(name = "password", nullable = false, insertable = true, updatable = true, length = 50)
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = StringUtils.decodeString(password);
     }
 
 
-    @Basic
-    @Column(name = "status", nullable = false, insertable = true, updatable = true, length = 50)
-    @Enumerated(EnumType.STRING)
+
     public Status getStatus() {
         return status;
     }
@@ -96,28 +108,14 @@ public class UsersEntity implements BaseEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "usersByAuthor")
-    public Collection<ArticlesEntity> getArticlesById() {
-        return articlesById;
+    public Collection<Article> getArticles() {
+        return articles;
     }
 
-    public void setArticlesById(Collection<ArticlesEntity> articlesById) {
-        this.articlesById = articlesById;
+    public void setArticles(Collection<Article> articlesById) {
+        this.articles = articlesById;
     }
 
-//    @OneToMany(mappedBy = "usersByIdUsers", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-//    @EmbeddedId
-//    public Collection<UsersrulesEntity> getUsersrulesById() {
-//        return usersrulesById;
-//    }
-//
-//    public void setUsersrulesById(Collection<UsersrulesEntity> usersrulesById) {
-//        this.usersrulesById = usersrulesById;
-//    }
-    
-    @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-    @JoinTable(name="users_rights")
-    @Column(name="access_right_id")
     public Set<AccessRight> getAccessList()
     {
 	    return accessList;

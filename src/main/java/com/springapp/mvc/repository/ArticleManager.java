@@ -1,25 +1,19 @@
 package com.springapp.mvc.repository;
 
 import com.springapp.mvc.dao.DAOManager;
-import com.springapp.mvc.domain.Article;
-import com.springapp.mvc.domain.FirstPage;
-import com.springapp.mvc.domain.TagsEntity;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.*;
+import com.springapp.mvc.domain.*;
+
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author kapitoha
- *
  */
 @Repository
 @Transactional
@@ -31,7 +25,7 @@ public class ArticleManager {
 
     public TagManager getTagsManager()
     {
-	return null == tagManager? new ArticleManager.TagManager() : tagManager;
+	return null == tagManager ? new ArticleManager.TagManager() : tagManager;
     }
 
     public List<Article> getArticles()
@@ -65,163 +59,217 @@ public class ArticleManager {
 	return daomanager.deleteInstance(article.getId(), Article.class);
     }
 
-//    public boolean putArticleOnFirstPage(Article article, boolean isFeatured)
-//    {
-//	FirstPage page = new FirstPage();
-//	page.setArticle(article);
-//	page.setFeatured(isFeatured);
-//	return false;
-//    }
-    
-    public FirstPage getLastFirstPage()
-    {
-	FirstPage fp = null;
-	Session session = null;
-	try
-	{
-	    fp = new FirstPage();
-	    DetachedCriteria maxId = DetachedCriteria.forClass(FirstPage.class)
-		    .setProjection(Projections.max("id"));
-	    session = daomanager.getSessionFactory().openSession();
-	    @SuppressWarnings("unchecked")
-	    List<FirstPage> list = session.createCriteria(FirstPage.class)
-		    .add(Property.forName("id").eq(maxId)).list();
-	    if (null != list && !list.isEmpty())
-		fp = list.get(0);
-	}
-	catch (HibernateException e)
-	{
-	    e.printStackTrace();
-	    return null;
-	}
-	finally
-	{
-	    if (null != session)
-		session.close();
-	}
-	return fp;
-    }
-    
-//    public int getLastMainPageId()
-//    {
-//	FirstPage last = getLastFirstPage();
-//	return (last != null)? last.getId() : 0;
-//    }
-
     public FirstPage getFirstPage(Article article)
     {
-	List<FirstPage> fpList = daomanager.getInstanceList(FirstPage.class, null, Restrictions.eq("article", article));
-	System.out.println("FPList size: " + fpList.size());
+	List<FirstPage> fpList = daomanager.getInstanceList(FirstPage.class, null,
+		Restrictions.eq("article", article));
 	return (fpList != null && !fpList.isEmpty()) ? fpList.get(0) : null;
     }
 
+    /**
+     * Deletes article using SQL query from First page even if CascadeType.ALL
+     * is presents
+     * 
+     * @param article
+     */
     public void removeArticleFromFirstPageDirectly(Article article)
     {
 	if (null != article)
 	{
-	    Session session = null;
-	    Transaction transaction = null;
-	    try
-	    {
-		session = daomanager.getSessionFactory().openSession();
-		transaction = session.beginTransaction();
-		Query query = session.createQuery(String.format(
+	    daomanager.executeHQLQuery(String.format(
 		    "DELETE FROM %s WHERE article_id = :id",
-		    FirstPage.class.getSimpleName()));
-		query.setInteger("id", article.getId());
-		System.out.println(query.executeUpdate());
-		transaction.commit();
-	    }
-	    catch (HibernateException e)
-	    {
-		if (null != transaction)
-		{
-		    transaction.rollback();
-		}
-		e.printStackTrace();
-	    }
-	    finally {
-		if (null != session) session.close();
-	    }
+		    FirstPage.class.getSimpleName()), article.getId());
 	}
-	else {
+	else
+	{
 	    System.err.println("article == null");
 	}
     }
-    
-    
+
+    /**
+     * Deletes article using SQL query from archive even if CascadeType.ALL is
+     * presents
+     * 
+     * @param article
+     */
+    public void deleteFromArchiveDirectly(Article article)
+    {
+	daomanager.executeHQLQuery(
+		String.format("DELETE FROM %s arc WHERE arc.articleId = ?",
+			Archive.class.getSimpleName()), article.getId());
+    }
+
+    public List<Article> getArchivedArticles()
+    {
+	List<Archive> list = daomanager.getInstanceList(Archive.class, Order.asc("date"));
+	List<Article> articles = new ArrayList<>();
+	for (Archive archive : list)
+	{
+	    articles.add(archive.getArticle());
+	}
+	return articles;
+    }
+
+    /**
+     * Returns Set<Article> with articles with satisfied parameters.
+     * 
+     * @param compositeSearch
+     *            if true, than all required parameters will be used
+     *            independently from each other.
+     * @param phrase
+     *            some phrase or keyword in Article's title or content
+     * @param author
+     *            Cptn. Obvious
+     * @param tags
+     * @return Set
+     */
+    public List<Article> searchArticleByCriterion(boolean compositeSearch,
+	    String phrase, UsersEntity author, TagsEntity... tags)
+    {
+	Set<Article> set = new HashSet<>();
+	List<Criterion> criterions = new ArrayList<>();
+	Criterion[] criterionArray;
+	if (null != phrase && !phrase.isEmpty())
+	{
+	    Criterion title = Restrictions.like("title",
+		    ("%" + phrase.toLowerCase() + "%"));
+	    Criterion content = Restrictions.like("content",
+		    ("%" + phrase.toLowerCase() + "%").getBytes());
+	    criterions.add(Restrictions.or(title, content));
+	    if (!compositeSearch)
+	    {
+		criterionArray = new Criterion[criterions.size()];
+		for (int i = 0; i < criterions.size(); i++)
+		{
+		    criterionArray[i] = criterions.get(i);
+		}
+		set.addAll(daomanager.getInstanceList(Article.class, Order.asc("id"),
+			criterionArray));
+		criterions.clear();
+	    }
+	}
+	if (null != author)
+	{
+	    criterions.add(Restrictions.eq("author", author));
+	    if (!compositeSearch)
+	    {
+		criterionArray = new Criterion[criterions.size()];
+		for (int i = 0; i < criterions.size(); i++)
+		{
+		    criterionArray[i] = criterions.get(i);
+		}
+		set.addAll(daomanager.getInstanceList(Article.class, Order.asc("author"),
+			criterionArray));
+		criterions.clear();
+	    }
+	}
+	if (compositeSearch)
+	{
+	    criterionArray = new Criterion[criterions.size()];
+	    for (int i = 0; i < criterions.size(); i++)
+	    {
+		criterionArray[i] = criterions.get(i);
+	    }
+	    set.addAll(daomanager.getInstanceList(Article.class, Order.asc("author"),
+		    criterionArray));
+	}
+	if (null != tags && tags.length > 0)
+	{
+	    Set<Article> articles = new LinkedHashSet<>();
+	    for (TagsEntity tag : tags)
+		articles.addAll(tag.getArticles());
+	    if (!compositeSearch)
+		set.addAll(articles);
+	    else
+	    {
+		articles.retainAll(set);
+		set.clear();
+		set = articles;
+	    }
+	}
+	Comparator<Article> comparator = new Comparator<Article>()
+	{
+	    @Override
+	    public int compare(Article o1, Article o2)
+	    {
+		if (o1.getCreationDate().getTime() == o2.getCreationDate().getTime())
+		    return 0;
+		return o1.getCreationDate().getTime() < o2.getCreationDate().getTime() ? 1
+			: -1;
+	    }
+	};
+	List<Article> articleList = new ArrayList<>(set);
+	Collections.sort(articleList, comparator);
+	return articleList;
+    }
+
     public class TagManager {
 	public TagsEntity getTag(String tagName)
 	{
-	    List<TagsEntity> list = daomanager.getInstanceList(TagsEntity.class, Order.asc("name"),
-			    Restrictions.eq("name", tagName));
-	    return list != null && !list.isEmpty()? list.get(0) : null;
+	    List<TagsEntity> list = daomanager.getInstanceList(TagsEntity.class,
+		    Order.asc("name"), Restrictions.eq("name", tagName));
+	    return list != null && !list.isEmpty() ? list.get(0) : null;
 	}
+
 	public TagsEntity getTag(int id)
 	{
-	    List<TagsEntity> list = daomanager.getInstanceList(TagsEntity.class, Order.asc("id"),
-			    Restrictions.eq("id", id));
-	    return list != null && !list.isEmpty()? list.get(0) : null;
+	    List<TagsEntity> list = daomanager.getInstanceList(TagsEntity.class,
+		    Order.asc("id"), Restrictions.eq("id", id));
+	    return list != null && !list.isEmpty() ? list.get(0) : null;
 	}
-	//additional methods
+
+	// additional methods
 	public List<TagsEntity> getTags(Article article)
 	{
-	    Session session = null;
-	    Transaction transaction = null;
+	    @SuppressWarnings("unchecked")
+	    List<Integer> list = daomanager
+		    .executeHQLQueryAndGetList(
+			    "SELECT tag_id FROM article_tags at WHERE at.article_id = :article_id",
+			    article.getId());
 	    List<TagsEntity> tags = new ArrayList<TagsEntity>();
-	    try
+	    for (Object res : list)
 	    {
-		session = daomanager.getSessionFactory().openSession();
-		transaction = session.beginTransaction();
-		Query query = session.createSQLQuery("SELECT tag_id FROM article_tags at WHERE at.article_id = :article_id");
-		query.setInteger("article_id", article.getId());
-		transaction.commit();
-		for (Object res : query.list())
-		{
-		    tags.add(getTagsManager().getTag((int)res));
-		}
-	    }
-	    catch (Exception e)
-	    {
-		e.printStackTrace();
-		if (null != transaction)
-		{
-		    transaction.rollback();
-		}
-	    }
-	    finally
-	    {
-		if (null != session) session.close();
+		tags.add(getTagsManager().getTag((int) res));
 	    }
 	    return tags;
 	}
+
+	public void removeAllArticleTagsDirectly(Article article)
+	{
+	    daomanager.executeHQLQuery(
+		    "DELETE FROM article_tags WHERE article_id = :article_id",
+		    article.getId());
+	}
+
 	public void removeTagFromArticleDirectly(Article article, TagsEntity tag)
 	{
-	    Session session = null;
-	    Transaction transaction = null;
-	    try
+	    daomanager
+		    .executeHQLQuery(
+			    "DELETE FROM article_tags a WHERE a.article_id = :article_id AND a.tag_id = :tag_id",
+			    article.getId(), tag.getId());
+	}
+
+	public Set<TagsEntity> parseTagsFromString(String string)
+	{
+	    HashSet<TagsEntity> set = new HashSet<>();
+	    if (null != string && !string.isEmpty())
 	    {
-		session = daomanager.getSessionFactory().openSession();
-		transaction = session.beginTransaction();
-		Query query = session.createSQLQuery("DELETE FROM article_tags a WHERE a.article_id = :article_id AND a.tag_id = :tag_id");
-		query.setInteger("article_id", article.getId());
-		query.setInteger("tag_id", tag.getId());		
-		transaction.commit();
-	    }
-	    catch (Exception e)
-	    {
-		e.printStackTrace();
-		if (null != transaction)
+		String[] tags = string.toLowerCase().trim().replaceAll("\\s{2,}", " ")
+			.split("(\\s+)|(\\s*,s*)|(,+)");
+		for (String tag : tags)
 		{
-		    transaction.rollback();
+		    if (!tag.isEmpty())
+		    {
+			TagsEntity tagsEntity = ArticleManager.this.getTagsManager().getTag(tag);
+			if (null == tagsEntity)
+			    set.add(new TagsEntity(tag));
+			else
+			    set.add(tagsEntity);
+		    }
 		}
 	    }
-	    finally
-	    {
-		if (null != session) session.close();
-	    }
+	    return set;
 	}
     }
-    
 
 }

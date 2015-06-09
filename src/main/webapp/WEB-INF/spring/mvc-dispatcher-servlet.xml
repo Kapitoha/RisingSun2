@@ -17,11 +17,13 @@
     </bean>
 
     <mvc:resources mapping="/resources/**" location="/resources/" />
-    <mvc:resources mapping="/ckeditor/**" location="/resources/ckeditor/" />
     <mvc:resources mapping="/img/**" location="/resources/img/" />
     <mvc:resources mapping="/css/**" location="/resources/css/" />
     <mvc:resources mapping="/js/**" location="/resources/js/" />
     <mvc:resources mapping="/jspf/**" location="/WEB-INF/pages/jspf/" />
+    <!-- Editor -->
+    <mvc:resources mapping="/ckeditor/**" location="/resources/ckeditor/" />
+    <mvc:resources mapping="/tinymce/**" location="/resources/tinymce/" />
     <!-- bootstrap -->
     <mvc:resources mapping="/bower_components/**" location="/resources/bower_components/" />
 

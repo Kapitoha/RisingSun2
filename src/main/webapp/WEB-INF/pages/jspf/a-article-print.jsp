@@ -7,14 +7,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="coll" uri="/WEB-INF/tag/collection_utils.tld"%>
 
-<%--
-  User: kapitoha
-  Date: 23.05.15
---%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
 <c:set var="art_list" value="${ articles_list }" />
 <c:set var="allow" value="img/allow.png" />
 <c:set var="disallow" value="img/disabled.png" />
@@ -63,7 +55,7 @@
 										<td align="center" title="Is placed on the first page">
 											<img alt="${ not empty article.firstPage }" src="${ not empty article.firstPage? allow : disallow }">
 										</td>
-										<td align="center" title="Is archived"><c:out value="false"></c:out></td>
+										<td align="center" title="Is archived"><c:out value="${ not empty article.archive }"></c:out></td>
 										<td align="center" class="center"><form action="admin-article-view">
 											<input type="hidden" name="id" value="${ article.id }"> 
 <%-- 											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> --%>

@@ -1,9 +1,8 @@
 package com.springapp.mvc.domain;
 
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.Set;
-
-import javax.persistence.*;
 
 /**
  * Created by Alex on 30.04.2015.
@@ -11,6 +10,10 @@ import javax.persistence.*;
 @Entity
 @Table(name = "tags")
 public class TagsEntity implements BaseEntity {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(unique=true, nullable = false, insertable = true, updatable = true)
     @GeneratedValue

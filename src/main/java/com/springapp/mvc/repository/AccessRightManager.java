@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.springapp.mvc.dao.DAOManager;
 import com.springapp.mvc.domain.AccessRight;
+import com.springapp.mvc.domain.Right;
 
 /**
  * @author kapitoha
@@ -41,17 +42,9 @@ public class AccessRightManager {
 	List<AccessRight> list = getAccessRightsList();
 	if (null == list || list.isEmpty())
 	{
-	    String[] rights = new String("EDIT_USER,"
-	    	+ "EDIT_ARTICLE_MASTER,"
-		+ "DELETE_ARTICLE_MASTER,"
-		+ "MANAGE_FIRST_PAGE,"
-	    	+ "EDIT_ARTICLE_AUTHOR,"
-	    	+ "DELETE_ARTICLE_AUTHOR,"
-	    	+ "CREATE_ARTICLE")
-	    .split(",\\s*");
-	    for (String string : rights)
+	    for (Right right : Right.values())
 	    {
-		getManager().saveInstance(new AccessRight(string));
+		getManager().saveInstance(new AccessRight(right.toString()));
 	    }
 	    list = new ArrayList<AccessRight>(getAccessRightsList());
 	}

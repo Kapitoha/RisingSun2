@@ -11,6 +11,10 @@ import javax.persistence.*;
 @Entity
 @Table(name="first_page")
 public class FirstPage implements BaseEntity {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(name="article_id", unique=true, nullable=false)
     @GeneratedValue(generator="gen")

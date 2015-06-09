@@ -28,6 +28,8 @@
 					<script type="text/javascript">
 						CKEDITOR.replace('editor');
 					</script>
+					<label for="image">Image URL</label><br>
+					<input type="url" name="image" class="form-control" value="${ article.imageUrl }">
 					<label for="tags">Tags (input through the space or comma)</label><br> <input type="text"
 							name="tags" class="form-control" value="${ article.convertTagsToString() }"
 							maxlength="255">
@@ -35,7 +37,7 @@
 						first page
 					<input type="checkbox" name="featured" ${ not empty article.firstPage &&
 						article.firstPage.featured? 'checked' : '' }	/> Is featured</p>
-					<input type="checkbox" name="archived" ${ not empty article.archive? 'checked' : '' } />Is Archived</p>
+					<input type="checkbox" name="archived" ${ not empty article.archive? 'checked' : '' } />Is Archived
 					<input type="hidden" name="id" value="${ article.id }">
 					<input type="hidden" name="${_csrf.parameterName}"
 						value="${_csrf.token}" />
