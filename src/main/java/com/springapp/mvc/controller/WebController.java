@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -32,7 +32,7 @@ public class WebController {
     public ModelAndView main()
     {
 	ModelAndView view = new ModelAndView("/index");
-	Collection<FirstPage> firstPages = articleManager.getFirstPageArticles();
+	Set<FirstPage> firstPages = articleManager.getFirstPages();
 	view.addObject("page_tag", "first_page");
 	view.addObject("firstPages", firstPages);
 	return view;
@@ -66,8 +66,9 @@ public class WebController {
 	result.addAll(articleManager.searchArticleByCriterion(isCompositSearch,
 		request.getParameter("keyword"), user, tagArray));
 	ModelAndView view = new ModelAndView("index");
-	view.addObject("result_list", result);
+	view.addObject("result_list", new ArrayList<Article>(result));
 	view.addObject("page_tag", "search");
+	view.addObject("key_word", request.getParameter("keyword"));
 	return view;
     }
 
@@ -75,7 +76,7 @@ public class WebController {
     public ModelAndView viewArchive(HttpServletRequest request)
     {
 	ModelAndView view = new ModelAndView("index");
-	view.addObject("result_list", articleManager.getArchivedArticles());
+	view.addObject("result_list", new ArrayList<Article>(articleManager.getArchivedArticles()));
 	view.addObject("page_tag", "archive");
 	return view;
     }

@@ -1,6 +1,7 @@
 package com.springapp.mvc.domain;
 
 import javax.persistence.*;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ public class TagsEntity implements BaseEntity {
      */
     private static final long serialVersionUID = 1L;
     @Id
-    @Column(unique=true, nullable = false, insertable = true, updatable = true)
+    @Column(unique=true, nullable = false, insertable = true, updatable = true, length = 11)
     @GeneratedValue
     private int id;
     @Basic
@@ -60,10 +61,17 @@ public class TagsEntity implements BaseEntity {
     }
 
     @Override
+    public String toString()
+    {
+	return "TagsEntity [id=" + id + ", name=" + name + ", articles count: " + articles.size() + "]";
+    }
+
+    @Override
     public int hashCode()
     {
 	final int prime = 31;
 	int result = 1;
+	result = prime * result + id;
 	result = prime * result + ((name == null) ? 0 : name.hashCode());
 	return result;
     }
@@ -78,6 +86,8 @@ public class TagsEntity implements BaseEntity {
 	if (getClass() != obj.getClass())
 	    return false;
 	TagsEntity other = (TagsEntity) obj;
+	if (id != other.id)
+	    return false;
 	if (name == null)
 	{
 	    if (other.name != null)
@@ -87,12 +97,7 @@ public class TagsEntity implements BaseEntity {
 	    return false;
 	return true;
     }
-
-    @Override
-    public String toString()
-    {
-	return "TagsEntity [id=" + id + ", name=" + name + ", articles count: " + articles.size() + "]";
-    }
+    
     
     
     

@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+
 import java.util.Date;
 
 /**
@@ -20,6 +21,7 @@ public class Archive implements BaseEntity {
     @GenericGenerator(name="generator", strategy="foreign", parameters=@Parameter(name="property", value = "article"))
     @Id
     @GeneratedValue(generator="generator")
+    @Column(nullable = false, unique = true, length = 11)
     private int articleId;
     @OneToOne
     @PrimaryKeyJoinColumn
@@ -71,7 +73,6 @@ public class Archive implements BaseEntity {
     {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((article == null) ? 0 : article.hashCode());
 	result = prime * result + articleId;
 	result = prime * result + ((date == null) ? 0 : date.hashCode());
 	return result;
@@ -87,13 +88,6 @@ public class Archive implements BaseEntity {
 	if (getClass() != obj.getClass())
 	    return false;
 	Archive other = (Archive) obj;
-	if (article == null)
-	{
-	    if (other.article != null)
-		return false;
-	}
-	else if (!article.equals(other.article))
-	    return false;
 	if (articleId != other.articleId)
 	    return false;
 	if (date == null)
@@ -105,6 +99,8 @@ public class Archive implements BaseEntity {
 	    return false;
 	return true;
     }
+
+    
     
     
 }

@@ -1,7 +1,5 @@
 package com.springapp.mvc.domain;
 
-import com.springapp.mvc.utils.StringUtils;
-
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,11 +16,11 @@ public class UsersEntity implements BaseEntity {
      */
     private static final long serialVersionUID = 1L;
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = true)
+    @Column(name = "ID", nullable = false, insertable = true, updatable = true, length = 11)
     @GeneratedValue
     private int id;
     @Basic
-    @Column(name = "Name", nullable = false, insertable = true, updatable = true, length = 100)
+    @Column(name = "Name", nullable = false, insertable = true, updatable = true, length = 50)
     private String name;
     @Basic
     @Column(name = "Login", nullable = false, insertable = true, updatable = true, length = 50)
@@ -34,7 +32,8 @@ public class UsersEntity implements BaseEntity {
     @Column(name = "status", nullable = false, insertable = true, updatable = true, length = 50)
     @Enumerated(EnumType.STRING)
     private Status status;
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     private Collection<Article> articles = Collections.emptyList();
     @ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinTable(name="users_rights")
@@ -56,7 +55,7 @@ public class UsersEntity implements BaseEntity {
     }
 
     public void setName(String name) {
-        this.name = StringUtils.decodeString(name);
+        this.name = name;
     }
 
 
@@ -65,7 +64,7 @@ public class UsersEntity implements BaseEntity {
     }
 
     public void setLogin(String login) {
-        this.login = StringUtils.decodeString(login);
+        this.login = login;
     }
 
     public String getPassword() {
@@ -73,7 +72,7 @@ public class UsersEntity implements BaseEntity {
     }
 
     public void setPassword(String password) {
-        this.password = StringUtils.decodeString(password);
+        this.password = password;
     }
 
 
@@ -84,28 +83,6 @@ public class UsersEntity implements BaseEntity {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UsersEntity that = (UsersEntity) o;
-
-        if (id != that.id) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (login != null ? !login.equals(that.login) : that.login != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (login != null ? login.hashCode() : 0);
-        return result;
     }
 
     public Collection<Article> getArticles() {
@@ -125,4 +102,57 @@ public class UsersEntity implements BaseEntity {
     {
 	this.accessList = accessList;
     }
+
+    @Override
+    public int hashCode()
+    {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + id;
+	result = prime * result + ((login == null) ? 0 : login.hashCode());
+	result = prime * result + ((name == null) ? 0 : name.hashCode());
+	result = prime * result + ((password == null) ? 0 : password.hashCode());
+	result = prime * result + ((status == null) ? 0 : status.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	UsersEntity other = (UsersEntity) obj;
+	if (id != other.id)
+	    return false;
+	if (login == null)
+	{
+	    if (other.login != null)
+		return false;
+	}
+	else if (!login.equals(other.login))
+	    return false;
+	if (name == null)
+	{
+	    if (other.name != null)
+		return false;
+	}
+	else if (!name.equals(other.name))
+	    return false;
+	if (password == null)
+	{
+	    if (other.password != null)
+		return false;
+	}
+	else if (!password.equals(other.password))
+	    return false;
+	if (status != other.status)
+	    return false;
+	return true;
+    }
+    
+    
 }

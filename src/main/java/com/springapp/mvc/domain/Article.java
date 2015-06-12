@@ -1,10 +1,8 @@
 package com.springapp.mvc.domain;
 
 import com.springapp.mvc.repository.ArticleManager;
-import com.springapp.mvc.utils.StringUtils;
 
 import javax.persistence.*;
-
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -13,7 +11,7 @@ import java.util.*;
  *
  */
 @Entity
-@Table(name = "articles_all")
+@Table(name = "articles")
 public class Article implements BaseEntity {
     /**
      * 
@@ -84,7 +82,7 @@ public class Article implements BaseEntity {
     public void setContent(String content)
     {
 	if (content != null)
-	    this.content = StringUtils.decodeString(content).getBytes();
+	    this.content = content.getBytes();
     }
 
     public UsersEntity getAuthor()
@@ -216,6 +214,7 @@ public class Article implements BaseEntity {
 	result = prime * result + Arrays.hashCode(content);
 	result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
 	result = prime * result + id;
+	result = prime * result + ((imageUrl == null) ? 0 : imageUrl.hashCode());
 	result = prime * result + ((tagList == null) ? 0 : tagList.hashCode());
 	result = prime * result + ((title == null) ? 0 : title.hashCode());
 	return result;
@@ -249,6 +248,13 @@ public class Article implements BaseEntity {
 	    return false;
 	if (id != other.id)
 	    return false;
+	if (imageUrl == null)
+	{
+	    if (other.imageUrl != null)
+		return false;
+	}
+	else if (!imageUrl.equals(other.imageUrl))
+	    return false;
 	if (tagList == null)
 	{
 	    if (other.tagList != null)
@@ -266,5 +272,6 @@ public class Article implements BaseEntity {
 	return true;
     }
 
+    
 
 }

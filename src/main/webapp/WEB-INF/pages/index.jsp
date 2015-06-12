@@ -5,7 +5,7 @@
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="ru">
 <head>
 <c:import url="jspf/head.jsp" />
 </head>
@@ -19,13 +19,13 @@
 				<div class="btn-group" id="myDropdown">
 				<form id="search_form" action="search"></form>
 					<button type="button" class="btn btn-default dropdown-toggle fa fa-search"
-						data-toggle="dropdown"> 
+						data-toggle="dropdown">
 						Search <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu">
 						<li>
 							<label for="keyword">Keyword</label>
-							<input form="search_form" type="text" name="keyword" class="form-control" title="Enter some keyword or phrase">
+							<input form="search_form" type="text" name="keyword" id="keyword" class="form-control" title="Enter some keyword or phrase">
 						</li>
 						<li>
 							<label for="author">Author</label>
@@ -69,15 +69,6 @@
 		<!-- /.content-container -->
 		<footer>
 			<p>Copyright &copy; 2015 Rising Sun</p>
-
-			<div class="social right">
-				<a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i
-					class="fa fa-twitter"></i></a> <a href="#"><i
-					class="fa fa-google-plus"></i></a> <a href="#"><i
-					class="fa fa-dribbble"></i></a> <a href="#"><i
-					class="fa fa-instagram"></i></a> <a href="#"><i
-					class="fa fa-linkedin"></i></a>
-			</div>
 		</footer>
 	</div>
 	<!-- <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script> -->
@@ -97,6 +88,7 @@
 	<script type="text/javascript">
 		dropdown('#myDropdown .dropdown-menu');
 	</script>
+	<script type="text/javascript">pagination('.pagination li')</script>
 
 </body>
 </html>

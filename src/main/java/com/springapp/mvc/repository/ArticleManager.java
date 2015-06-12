@@ -49,9 +49,9 @@ public class ArticleManager {
 	return daomanager.updateInstance(article);
     }
 
-    public List<FirstPage> getFirstPageArticles()
+    public Set<FirstPage> getFirstPages()
     {
-	return daomanager.getInstanceList(FirstPage.class);
+	return new LinkedHashSet<>(daomanager.getInstanceList(FirstPage.class, Order.asc("show_order")));
     }
 
     public boolean deleteArticle(Article article)
@@ -86,6 +86,11 @@ public class ArticleManager {
 	}
     }
 
+    public boolean updateFirstPage(FirstPage firstPage)
+    {
+	return daomanager.updateInstance(firstPage);
+    }
+
     /**
      * Deletes article using SQL query from archive even if CascadeType.ALL is
      * presents
@@ -99,10 +104,10 @@ public class ArticleManager {
 			Archive.class.getSimpleName()), article.getId());
     }
 
-    public List<Article> getArchivedArticles()
+    public Collection<Article> getArchivedArticles()
     {
-	List<Archive> list = daomanager.getInstanceList(Archive.class, Order.asc("date"));
-	List<Article> articles = new ArrayList<>();
+	List<Archive> list = daomanager.getInstanceList(Archive.class, Order.desc("date"));
+	Set<Article> articles = new LinkedHashSet<Article>();
 	for (Archive archive : list)
 	{
 	    articles.add(archive.getArticle());

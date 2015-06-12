@@ -1,7 +1,5 @@
 package com.springapp.mvc.utils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /**
@@ -17,23 +15,34 @@ public class StringUtils {
 	Matcher match = pattern.matcher(string);
 	return match.find();
     }
-    /**
-     * It's a miracle converting of "abra-kadabra" into real path.
-     * @param string
-     * @return
-     */
-    public static String decodeString(String string)
+    
+    public static boolean checkIsEmpty(String string)
     {
-	String u = null;
-	try
-	{
-	    u = URLDecoder.decode(string, "UTF-8");
-	}
-	catch (UnsupportedEncodingException e)
-	{
-	    System.err.println("Cannot decode url, so return default");
-	    return string;
-	}
-	return u;
+	final Pattern pattern = Pattern.compile("^\\s*$");
+	Matcher match = pattern.matcher(string);
+	return string == null || match.find();
     }
+    
+    public static String highlightKeywords(String keyword, String content)
+    {
+	StringBuffer sb;
+	if (keyword != null && !checkIsEmpty(keyword) && null != content)
+	{
+	    sb = new StringBuffer();
+	    Pattern pattern = Pattern.compile("(=\".*"+keyword+".*\")|"+keyword, Pattern.CASE_INSENSITIVE);
+	    Matcher matcher = pattern.matcher(content);
+	    while (matcher.find())
+	    {
+		String rez = matcher.group();
+		if (rez.matches("(=\".*"+keyword+".*\")")) continue;
+		else
+		matcher.appendReplacement(sb,
+			"<span class=\"highlight\">" + rez + "</span>");
+	    }
+	    matcher.appendTail(sb);
+	}
+	else return content;
+	return sb.toString();
+    }
+
 }

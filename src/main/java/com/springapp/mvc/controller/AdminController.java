@@ -48,6 +48,7 @@ public class AdminController {
 	return view;
     }
 
+    @PreAuthorize("hasAnyAuthority('EDIT_USER')")
     @RequestMapping(value = "/admin-users")
     public ModelAndView showUsers()
     {
@@ -59,7 +60,7 @@ public class AdminController {
 	return view;
     }
 
-    @PreAuthorize("hasRole('EDIT_USER')")
+    @PreAuthorize("hasAnyAuthority('EDIT_USER')")
     @RequestMapping(value = "/admin-user-edit", method = RequestMethod.POST)
     public ModelAndView editUser(@ModelAttribute(value = "user") UsersEntity user,
 	    HttpServletRequest request)
@@ -92,13 +93,14 @@ public class AdminController {
 	return view;
     }
 
+    @PreAuthorize("hasAnyAuthority('EDIT_USER')")
     @RequestMapping(value = "/admin-user-create")
     public ModelAndView createUser(HttpServletRequest request)
     {
 	return editUser(new UsersEntity(), request);
     }
 
-    @PreAuthorize("hasRole('EDIT_USER')")
+    @PreAuthorize("hasAnyAuthority('EDIT_USER')")
     @RequestMapping(value = "/admin-user-save", method = RequestMethod.POST)
     public ModelAndView saveUser(@ModelAttribute("user") UsersEntity user,
 	    HttpServletRequest request, RedirectAttributes attr)
@@ -109,7 +111,6 @@ public class AdminController {
 	Status status = Status.valueOf(request.getParameter("status"));
 	if (null == userInstance)
 	{
-	    System.out.println("create new user");
 	    userInstance = new UsersEntity();
 	}
 
@@ -206,7 +207,6 @@ public class AdminController {
 	switch (action)
 	{
 	    case SAVE: // save action
-		System.out.println("save");
 		if (userRepository.saveUser(userInstance))
 		    result_msg = "Saving was successful";
 		else
@@ -216,7 +216,6 @@ public class AdminController {
 		}
 		break;
 	    case UPDATE: // update action
-		System.out.println("update");
 		if (!userRepository.updateUser(userInstance))
 		{
 		    request.setAttribute("error_msg", "Update was failed.");
@@ -246,11 +245,12 @@ public class AdminController {
 	return view;
     }
 
-    @PreAuthorize("hasAnyRole('EDIT_ARTICLE_MASTER', 'EDIT_ARTICLE_AUTHOR')")
+    @PreAuthorize("hasAnyAuthority('EDIT_ARTICLE_MASTER', 'EDIT_ARTICLE_AUTHOR')")
     @RequestMapping("/admin-article-edit")
     public ModelAndView editArticle(@ModelAttribute Article article,
 	    HttpServletRequest request) throws UnsupportedEncodingException
     {
+	if (article.getId() > 0) article = articleManager.getArticle(article.getId());
 	if (!isMatchesAccessRights(Right.EDIT_ARTICLE_MASTER.toString()))
 	{
 	    Principal userPrincipal = request.getUserPrincipal();
@@ -280,7 +280,7 @@ public class AdminController {
 
     }
 
-    @PreAuthorize("hasRole('CREATE_ARTICLE')")
+    @PreAuthorize("hasAnyAuthority('CREATE_ARTICLE')")
     @RequestMapping("/admin-article-create")
     public ModelAndView createArticle(HttpServletRequest request) throws UnsupportedEncodingException
     {
@@ -289,11 +289,12 @@ public class AdminController {
 	return manageArticle(new Article(), request);
     }
 
-    @PreAuthorize("hasAnyRole('DELETE_ARTICLE_MASTER', 'DELETE_ARTICLE_AUTHOR')")
+    @PreAuthorize("hasAnyAuthority('DELETE_ARTICLE_MASTER', 'DELETE_ARTICLE_AUTHOR')")
     @RequestMapping("/admin-article-delete")
     public ModelAndView deleteArticle(@ModelAttribute Article article,
 	    HttpServletRequest request, RedirectAttributes attributes)
     {
+	article = articleManager.getArticle(article.getId());
 	if (!isMatchesAccessRights(Right.DELETE_ARTICLE_MASTER.toString()))
 	{
 	    Principal userPrincipal = request.getUserPrincipal();
@@ -316,7 +317,6 @@ public class AdminController {
 	return new ModelAndView(new RedirectView("admin"));
     }
 
-    @PreAuthorize("hasRole('CREATE_ARTICLE')")
     @RequestMapping(value="/admin-article-save", method=RequestMethod.POST)
     public ModelAndView saveArticle(@ModelAttribute Article articleInstance,
 	    HttpServletRequest request, RedirectAttributes attributes) throws UnsupportedEncodingException
@@ -327,42 +327,65 @@ public class AdminController {
 	boolean isArchived = request.getParameter("archived") != null;
 	boolean isOnFirstPage = request.getParameter("show_main") != null && !isArchived;
 	boolean isFeatured = request.getParameter("featured") != null;
+	int position = Integer.valueOf(request.getParameter("position"));
 	String tags = request.getParameter("tags");
 	Article article = articleInstance.getId() > 0 ? articleManager
 		.getArticle(articleInstance.getId()) : articleInstance;
 	String content = request.getParameter("editor");
 	article.setTitle(request.getParameter("title"));
-	article.setContent(StringUtils.decodeString(content));
-	article.setAuthor(userRepository.getUser(StringUtils.decodeString(request
-		.getUserPrincipal().getName())));
+	article.setContent(content);
+	article.setAuthor(userRepository.getUser(request.getUserPrincipal().getName()));
 	article.setImageUrl(request.getParameter("image"));
-	article.parseAndSetTags(StringUtils.decodeString(tags), articleManager);
-	// First page handler
-	if (isOnFirstPage)
+	article.parseAndSetTags(tags, articleManager);
+	if (StringUtils.checkIsEmpty(article.getTitle()))
 	{
-	    if (article.getFirstPage() == null)
-		article.setFirstPage(new FirstPage());
-	    article.getFirstPage().setFeatured(isFeatured);
+	    request.setAttribute("error_msg", "Title cannot be empty");
+	    return editArticle(article, request);
 	}
-	else
+	// First page handler
+	List<FirstPage> firstPageList = Collections.emptyList();
+	if (isMatchesAccessRights(Right.MANAGE_FIRST_PAGE.toString()))
 	{
-	    if (article.getFirstPage() != null)
+	    if (isOnFirstPage)
 	    {
-		articleManager.removeArticleFromFirstPageDirectly(article);
-		article.setFirstPage(null);
+		if (article.getFirstPage() == null)
+		{
+		    article.setFirstPage(new FirstPage());
+		}
+		
+		firstPageList = new LinkedList<>(articleManager.getFirstPages());
+		if (firstPageList.contains(article.getFirstPage()))
+		{
+		    firstPageList.remove(article.getFirstPage());
+		    //		Collections.swap(firstPageList, firstPageList.indexOf(article.getFirstPage()), position-1);
+		}
+		firstPageList.add(position - 1, article.getFirstPage());
+		article.getFirstPage().setFeatured(isFeatured);
+		
+	    }
+	    else
+	    {
+		if (article.getFirstPage() != null)
+		{
+		    articleManager.removeArticleFromFirstPageDirectly(article);
+		    article.setFirstPage(null);
+		}
 	    }
 	}
 	//archive handler
-	if (isArchived)
+	if (isMatchesAccessRights(Right.MANAGE_ARCHIVE.toString()))
 	{
-	    if (article.getArchive() == null) article.setArchive(new Archive(new Date()));
-	}
-	else
-	{
-	    if (article.getArchive() != null) 
+	    if (isArchived)
 	    {
-		articleManager.deleteFromArchiveDirectly(article);
-		article.setArchive(null);
+		if (article.getArchive() == null) article.setArchive(new Archive(new Date()));
+	    }
+	    else
+	    {
+		if (article.getArchive() != null)
+		{
+		    articleManager.deleteFromArchiveDirectly(article);
+		    article.setArchive(null);
+		}
 	    }
 	}
 
@@ -371,12 +394,16 @@ public class AdminController {
 	    action = UPDATE;
 	}
 	else
+	{
 	    action = SAVE;
+	}
 	switch (action)
 	{
 	    case SAVE:
 		if (articleManager.saveArticle(article))
+		{
 		    msg = "Saving was successful";
+		}
 		else
 		{
 		    return editArticle(article, request);
@@ -384,7 +411,9 @@ public class AdminController {
 		break;
 	    case UPDATE:
 		if (articleManager.updateArticle(article))
+		{
 		    msg = "Article updated successfuly";
+		}
 		else
 		{
 		    return editArticle(article, request);
@@ -392,7 +421,16 @@ public class AdminController {
 		break;
 
 	    default:
-		break;
+		request.setAttribute("error_msg", "Unknown error was occurred!");
+		return editArticle(article, request);
+	}
+	if (isOnFirstPage)
+	{
+	    for (int i = 0; i < firstPageList.size(); i++)
+	    {
+		firstPageList.get(i).setShow_order(i + 1);
+		articleManager.updateFirstPage(firstPageList.get(i));
+	    }
 	}
 	attributes.addFlashAttribute("info_msg", msg);
 	return new ModelAndView(new RedirectView("admin"));
@@ -405,7 +443,6 @@ public class AdminController {
 	ModelAndView view = new ModelAndView("/admin");
 	view.addObject("page_tag", "article_view");
 	view.addObject("article_obj", articleManager.getArticle(article.getId()));
-	System.out.println("Article id: " + article.getId() + " | " + article.getTitle());
 	return view;
     }
 
@@ -463,26 +500,29 @@ public class AdminController {
 	this.articleManager = articleManager;
     }
 
-    public boolean isMatchesAccessRights(String... roles)
+    public boolean isMatchesAccessRights(String... rights)
     {
 	@SuppressWarnings("unchecked")
 	Collection<SimpleGrantedAuthority> authorities = (Collection<SimpleGrantedAuthority>) SecurityContextHolder
 		.getContext().getAuthentication().getAuthorities();
-	System.out.println(authorities);
-	for (String role : roles)
+	for (String right : rights)
 	{
 	    for (SimpleGrantedAuthority simpleGrantedAuthority : authorities)
 	    {
-		if (role.equals(simpleGrantedAuthority.getAuthority()))
+		if (right.equals(simpleGrantedAuthority.getAuthority()))
 		    return true;
 	    }
 	}
 	return false;
     }
-    
+
+    @RequestMapping("accessdenied")
     private ModelAndView accessDenied()
     {
-	return new ModelAndView(new RedirectView("denied"));
+//	ModelAndView view = new ModelAndView();
+//	view.addObject("page_tag", "denied");
+//	view.addObject("error_msg", "Access Denied!!!");
+	return new ModelAndView("/accessdenied");
     }
 
 }

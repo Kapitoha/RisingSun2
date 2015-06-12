@@ -7,7 +7,7 @@
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-  <title>Flip Turn Template by templatemo</title>
+  <title>Rising Sun web news</title>
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta charset="UTF-8">
@@ -21,4 +21,4 @@
   <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> 
       <!-- MetisMenu CSS -->
     <link href="bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
-  
+   

@@ -37,8 +37,12 @@
 					<input type="hidden" name="${_csrf.parameterName}"
 						value="${_csrf.token}" />
 				</form>
-				<button class="btn btn-warning" type="button" onclick="document.forms['edit_form'].submit();">Edit article</button>
-				<button class="btn btn-danger" type="button" onclick="document.forms['delete_form'].submit();" title="Delete article">Del.</button>
+				<sec:authorize access="hasAnyAuthority('EDIT_ARTICLE_MASTER', 'EDIT_ARTICLE_AUTHOR')">
+					<button class="btn btn-warning" type="button" onclick="document.forms['edit_form'].submit();">Edit article</button>
+				</sec:authorize>
+				<sec:authorize access="hasAnyAuthority('DELETE_ARTICLE_MASTER', 'DELETE_ARTICLE_AUTHOR')">
+					<button class="btn btn-danger" type="button" onclick="document.forms['delete_form'].submit();" title="Delete article">Del.</button>
+				</sec:authorize>
 				</div>
 			</div>
 		</div>
