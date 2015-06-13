@@ -1,6 +1,7 @@
 package com.springapp.mvc.domain;
 
 import com.springapp.mvc.repository.ArticleManager;
+import com.springapp.mvc.utils.StringUtils;
 
 import javax.persistence.*;
 import java.nio.charset.Charset;
@@ -61,12 +62,12 @@ public class Article implements BaseEntity {
 
     public String getTitle()
     {
-	return title;
+	return StringUtils.clearHTMLTags(title);
     }
 
     public void setTitle(String title)
     {
-	this.title = title;
+	this.title = StringUtils.clearHTMLTags(title);
     }
 
     public byte[] getContent()
@@ -82,7 +83,7 @@ public class Article implements BaseEntity {
     public void setContent(String content)
     {
 	if (content != null)
-	    this.content = content.getBytes();
+	    this.content = StringUtils.clearFromJavaScriptInjection(content).getBytes();
     }
 
     public UsersEntity getAuthor()
@@ -137,7 +138,8 @@ public class Article implements BaseEntity {
 	    if (null == tagList || tagList.isEmpty())
 		tagList = new HashSet<>();
 	    HashSet<TagsEntity> set = new HashSet<>(tagList);
-	    String[] tags = string.toLowerCase().trim().replaceAll("\\s{2,}", " ").split("(\\s+)|(\\s*,s*)|(,+)");
+	    String[] tags = StringUtils.clearFromJavaScriptInjection(string).toLowerCase().trim().replaceAll("\\s{2,}",
+			" ").split("(\\s+)|(\\s*,s*)|(,+)");
 	    for (String tag : tags)
 	    {
 		if (!tag.isEmpty())
@@ -186,92 +188,49 @@ public class Article implements BaseEntity {
     
     public String getContentText()
     {
-	return (content != null && content.length > 0)? new String(getContent(), Charset.forName("UTF-8")): "";
+	return (content != null && content.length > 0)? StringUtils.clearFromJavaScriptInjection(new String
+			(getContent(), Charset.forName("UTF-8"))): "";
     }
     
     public String getContentText(boolean hidePictures)
     {
-//	System.out.println(getContentText().re	placeAll("<img.+>", ""));
 	return hidePictures? getContentText().replaceAll("<img.+>", "") : getContentText();
     }
 
     public String getImageUrl()
     {
-	return imageUrl;
+	return StringUtils.clearHTMLTags(imageUrl);
     }
 
     public void setImageUrl(String imageUrl)
     {
-	this.imageUrl = imageUrl;
+	this.imageUrl = StringUtils.clearHTMLTags(imageUrl);;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+	if (this == o)
+	    return true;
+	if (o == null || getClass() != o.getClass())
+	    return false;
+
+	Article article = (Article) o;
+
+	if (id != article.id)
+	    return false;
+	if (author != null ? !author.equals(article.author) : article.author != null)
+	    return false;
+	return !(creationDate != null ? !creationDate.equals(article.creationDate) : article.creationDate != null);
+
     }
 
     @Override
     public int hashCode()
     {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + ((author == null) ? 0 : author.hashCode());
-	result = prime * result + Arrays.hashCode(content);
-	result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
-	result = prime * result + id;
-	result = prime * result + ((imageUrl == null) ? 0 : imageUrl.hashCode());
-	result = prime * result + ((tagList == null) ? 0 : tagList.hashCode());
-	result = prime * result + ((title == null) ? 0 : title.hashCode());
+	int result = id;
+	result = 31 * result + (author != null ? author.hashCode() : 0);
+	result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
 	return result;
     }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Article other = (Article) obj;
-	if (author == null)
-	{
-	    if (other.author != null)
-		return false;
-	}
-	else if (!author.equals(other.author))
-	    return false;
-	if (!Arrays.equals(content, other.content))
-	    return false;
-	if (creationDate == null)
-	{
-	    if (other.creationDate != null)
-		return false;
-	}
-	else if (!creationDate.equals(other.creationDate))
-	    return false;
-	if (id != other.id)
-	    return false;
-	if (imageUrl == null)
-	{
-	    if (other.imageUrl != null)
-		return false;
-	}
-	else if (!imageUrl.equals(other.imageUrl))
-	    return false;
-	if (tagList == null)
-	{
-	    if (other.tagList != null)
-		return false;
-	}
-	else if (!tagList.equals(other.tagList))
-	    return false;
-	if (title == null)
-	{
-	    if (other.title != null)
-		return false;
-	}
-	else if (!title.equals(other.title))
-	    return false;
-	return true;
-    }
-
-    
-
 }

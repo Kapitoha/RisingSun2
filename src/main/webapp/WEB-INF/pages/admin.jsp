@@ -27,19 +27,19 @@
 			<c:set var="p_tag" value="${ page_tag }" />
 			<c:choose>
 				<c:when test="${p_tag eq 'users_show'}">
-					<%@include file="jspf/a-users-print.jsp"%>
+					<c:import url="jspf/a-users-print.jsp" />
 				</c:when>
 				<c:when test="${p_tag eq 'user-edit'}">
-					<%@include file="jspf/a-user-edit.jsp"%>
+					<c:import url="jspf/a-user-edit.jsp" />
 				</c:when>
 				<c:when test="${p_tag eq 'articles_print'}">
-					<%@include file="jspf/a-article-print.jsp"%>
+					<c:import url="jspf/a-article-print.jsp" />
 				</c:when>
 				<c:when test="${p_tag eq 'articles_edit'}">
-					<%@include file="jspf/a-article-edit.jsp"%>
+					<c:import url="jspf/a-article-edit.jsp" />
 				</c:when>
 				<c:when test="${p_tag eq 'article_view'}">
-					<%@include file="jspf/a-article-view.jsp"%>
+					<c:import url="jspf/a-article-view.jsp" />
 				</c:when>
 			</c:choose>
 		</div>

@@ -17,24 +17,24 @@
 			<input type="hidden" name="id" value="${ user_obj.id }">
 			<div class="form-group">
 				<label for="name">User Name </label> <input type="text"
-					value="${user_obj.name }" name="name" class="form-control"
+					value="${user_obj.getName() }" name="name" class="form-control"
 					placeholder="Enter name" maxlength="24">
 			</div>
 			<div class="form-group">
 				<label for="login">User Login </label> <input type="text"
-					value="${user_obj.login }" name="login" class="form-control"
+					value="${user_obj.getLogin() }" name="login" class="form-control"
 					placeholder="Enter login" maxlength="24">
 			</div>
 			<div class="form-group">
 				<label for="name">User Password </label> <input type="text"
-					value="${user_obj.password }" name="password" class="form-control"
+					value="${user_obj.getPassword() }" name="password" class="form-control"
 					placeholder="Enter password" maxlength="24">
 			</div>
 			<div class="form-group">
 				<label for="status">Status </label> <select name="status"
 					class="form-group">
 					<c:forEach var="status_elem" items="${ status_list }">
-						<option ${ user_obj.status eq status_elem? 'selected' : '' }
+						<option ${ user_obj.getStatus() eq status_elem? 'selected' : '' }
 							value="${ status_elem }">
 							<c:out value="${ status_elem }"></c:out>
 						</option>
@@ -50,7 +50,8 @@
 				<c:forEach var="rule" items="${ rules_list }">
 					<li><input name="access_right" type="checkbox"
 						value="${ rule.id }"
-						${ coll:containsByField(userRightsList, field, rule.id)? 'checked' : '' }>${ rule.description }
+						${ coll:containsByField(userRightsList, field, rule.id)? 'checked' : '' }>${
+						rule.getDescription() }
 					</li>
 
 				</c:forEach>

@@ -45,8 +45,8 @@
                                 <c:forEach var="article" items="${ art_list }">
                                     <tr class="odd gradeA">
                                         <td>${ article.id }</td>
-                                        <td>${ article.title }</td>
-                                        <td align="center">${ article.author.name }</td>
+                                        <td>${ article.getTitle() }</td>
+                                        <td align="center">${ article.getAuthor().getName() }</td>
                                         <td>
                                             <p align="center"><f:formatDate value="${ article.creationDate }"
                                                                             type="date" pattern="dd/MM/yyyy"/></p>
@@ -56,12 +56,12 @@
                                         </td>
                                         <td align="center" title="Is placed on the first page">
                                             <p align="center"
-                                               style="${ not empty article.firstPage? 'background-color: #a2c044':'' }">${ not
+                                               style="${ not empty article.getFirstPage()? 'background-color: #a2c044':'' }">${ not
                                                     empty
-                                                            article.firstPage }</p>
+                                                            article.getFirstPage() }</p>
                                         </td>
                                         <td align="center" title="Position on the first page"><c:out
-                                                value="${ not empty article.firstPage? article.firstPage.show_order : ''
+                                                value="${ not empty article.getFirstPage()? article.getFirstPage().show_order : ''
 												 }"></c:out></td>
                                         <td align="center" title="Is archived">
                                             <p align="center"

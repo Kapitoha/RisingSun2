@@ -15,12 +15,12 @@
 		<div class="panel panel-primary">
 			<div class="panel-heading">
 				<c:out value=""></c:out>
-				<span id="article_view_author">Author: ${ article.author.name }</span>
+				<span id="article_view_author">Author: ${ article.getAuthor().getName() }</span>
 				<span id="article_view_date"><f:formatDate
 						value="${ article.creationDate }" type="date" pattern="dd/MM/yyyy" /></span>
 			</div>
 			<div class="panel-body">
-				<H2>${ article.title }</h2>
+				<H2>${ article.getTitle() }</h2>
 				${ article.getContentText() }
 			</div>
 			<div class="panel-footer">
@@ -33,7 +33,7 @@
 				</form>
 				<form name="delete_form" action="admin-article-delete" method="post">
 					<input type="hidden" name="id" value="${ article.id }">
-					<input type="hidden" name="title" value="${ article.title }">
+					<input type="hidden" name="title" value="${ article.getTitle() }">
 					<input type="hidden" name="${_csrf.parameterName}"
 						value="${_csrf.token}" />
 				</form>

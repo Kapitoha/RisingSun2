@@ -1,5 +1,7 @@
 package com.springapp.mvc.domain;
 
+import com.springapp.mvc.utils.StringUtils;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
@@ -51,31 +53,28 @@ public class UsersEntity implements BaseEntity {
 
 
     public String getName() {
-        return name;
+        return StringUtils.clearHTMLTags(name);
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = StringUtils.clearHTMLTags(name);
     }
 
-
     public String getLogin() {
-        return login;
+        return StringUtils.clearHTMLTags(login);
     }
 
     public void setLogin(String login) {
-        this.login = login;
+        this.login = StringUtils.clearHTMLTags(login);
     }
 
     public String getPassword() {
-        return password;
+        return StringUtils.clearHTMLTags(password);
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = StringUtils.clearHTMLTags(password);
     }
-
-
 
     public Status getStatus() {
         return status;
@@ -104,55 +103,22 @@ public class UsersEntity implements BaseEntity {
     }
 
     @Override
-    public int hashCode()
+    public boolean equals(Object o)
     {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + id;
-	result = prime * result + ((login == null) ? 0 : login.hashCode());
-	result = prime * result + ((name == null) ? 0 : name.hashCode());
-	result = prime * result + ((password == null) ? 0 : password.hashCode());
-	result = prime * result + ((status == null) ? 0 : status.hashCode());
-	return result;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        UsersEntity that = (UsersEntity) o;
+
+        return id == that.id;
+
     }
 
     @Override
-    public boolean equals(Object obj)
+    public int hashCode()
     {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	UsersEntity other = (UsersEntity) obj;
-	if (id != other.id)
-	    return false;
-	if (login == null)
-	{
-	    if (other.login != null)
-		return false;
-	}
-	else if (!login.equals(other.login))
-	    return false;
-	if (name == null)
-	{
-	    if (other.name != null)
-		return false;
-	}
-	else if (!name.equals(other.name))
-	    return false;
-	if (password == null)
-	{
-	    if (other.password != null)
-		return false;
-	}
-	else if (!password.equals(other.password))
-	    return false;
-	if (status != other.status)
-	    return false;
-	return true;
+        return id;
     }
-    
-    
 }

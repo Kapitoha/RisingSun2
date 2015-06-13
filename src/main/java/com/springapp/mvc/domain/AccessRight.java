@@ -1,5 +1,7 @@
 package com.springapp.mvc.domain;
 
+import com.springapp.mvc.utils.StringUtils;
+
 import javax.persistence.*;
 
 /**
@@ -21,7 +23,7 @@ public class AccessRight implements BaseEntity {
     
     public AccessRight(String description)
     {
-	this.description = description;
+	setDescription(description);
     }
 
 
@@ -35,11 +37,11 @@ public class AccessRight implements BaseEntity {
     }
     public String getDescription()
     {
-        return description;
+        return StringUtils.clearHTMLTags(description);
     }
     public void setDescription(String description)
     {
-        this.description = description;
+        this.description = StringUtils.clearHTMLTags(description);
     }
 
     @Override

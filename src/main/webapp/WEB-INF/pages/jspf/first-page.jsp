@@ -20,9 +20,9 @@
                     <div class="portfolio-group">
                         <div class="portfolio-item">
                             <div id="face">
-                                <img src="${ article.imageUrl }" alt="">
+                                <img src="${ article.getImageUrl() }" alt="">
 
-                                <h3>${article.title}</h3>
+                                <h3>${article.getTitle()}</h3>
                             </div>
                             <div class="detail"
                                  onclick="invoke('article-view?id=${article.id}');"
@@ -40,28 +40,28 @@
                 <c:set var="article" value="${ page.article }"/>
                     <div class="thumbnail col-lg-3" id="news-item"
                          style="background-color: #EEE6FA; ${page.featured?'border: 2px solid red' : ''}">
-                        <img id="ico" alt="" src="${article.imageUrl }" onclick="invoke('article-view?id=${article.id}');"
+                        <img id="ico" alt="" src="${article.getImageUrl() }" onclick="invoke('article-view?id=${article.id}');"
                              style="cursor: pointer;">
                         <c:if test="${page.featured}">
                             <img id="top-news" src="img/star.gif" alt="Top news">
                         </c:if>
                         <div class="caption">
                             <h4>
-                                <a href="article-view?id=${article.id}">${ article.title }</a>
+                                <a href="article-view?id=${article.id}">${ article.getTitle() }</a>
                             </h4>
                         </div>
                         <div class="about" style="bottom: 0; position: absolute;">
                             <ul>
-                                <li><i class="fa fa-user"></i><a href="search?author=${article.author.id}"
-                                                                 style="color: blue;">${ article.author.name }</a></li>
+                                <li><i class="fa fa-user"></i><a href="search?author=${article.getAuthor().id}"
+                                                                 style="color: blue;">${ article.getAuthor().getName() }</a></li>
                                 <li><i class="fa fa-calendar"></i> <f:formatDate value="${ article.creationDate }"
                                                                                  type="date"/></li>
                                 <c:if test="${ not empty article.getTagList() }">
                                     <li>
                                     	<i class="fa fa-tag"></i> 
                                     	<c:forEach var="tag" items="${ article.getTagList() }">
-	                                        <a class="label label-default" href="search?tag=${tag.name}"
-	                                           style="color: #fff;">${ tag.name}
+	                                        <a id="tag-elem" class="label label-default" href="search?tag=${tag.getName()}"
+	                                           style="color: #fff;">${ tag.getName()}
 	                                        </a>
                                     	</c:forEach>
                                     </li>

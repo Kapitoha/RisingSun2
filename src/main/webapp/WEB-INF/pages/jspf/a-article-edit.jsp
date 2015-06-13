@@ -19,7 +19,7 @@
                 <div class="form-group">
                     <label for="title">Title</label><br> <input type="text"
                                                                 name="title" class="form-control"
-                                                                value="${ article.title }"
+                                                                value="${ article.getTitle() }"
                                                                 maxlength="255">
                 </div>
                 <label for="editor">Content</label><br>
@@ -28,23 +28,23 @@
                     CKEDITOR.replace('editor');
                 </script>
                 <label for="image">Image URL</label><br>
-                <input type="url" name="image" class="form-control" value="${ article.imageUrl }">
+                <input type="url" name="image" class="form-control" value="${ article.getImageUrl() }">
                 <label for="tags">Tags (input through the space or comma)</label><br> <input type="text"
                                                                                              name="tags"
                                                                                              class="form-control"
                                                                                              value="${ article.convertTagsToString() }"
                                                                                              maxlength="255">
                 <sec:authorize access="hasAnyAuthority('MANAGE_FIRST_PAGE')">
-                    <p><input type="checkbox" name="show_main" ${ not empty article.firstPage? 'checked' : '' } />Is on
+                    <p><input type="checkbox" name="show_main" ${ not empty article.getFirstPage()? 'checked' : '' } />Is on
                         first page
-                        <input type="checkbox" name="featured" ${ not empty article.firstPage &&
-                                article.firstPage.featured? 'checked' : '' }    /> Is featured
-                        <input type="number" min="1" maxlength="5" value="${ not empty article.firstPage?
-                        article.firstPage.show_order : 1 }" name="position"> Position
+                        <input type="checkbox" name="featured" ${ not empty article.getFirstPage() &&
+                                article.getFirstPage().featured? 'checked' : '' }    /> Is featured
+                        <input type="number" min="1" maxlength="5" value="${ not empty article.getFirstPage()?
+                        article.getFirstPage().show_order : 1 }" name="position"> Position
                     </p>
                 </sec:authorize>
                 <sec:authorize access="hasAnyAuthority('MANAGE_ARCHIVE')">
-                    <input type="checkbox" name="archived" ${ not empty article.archive? 'checked' : '' } />Is Archived
+                    <input type="checkbox" name="archived" ${ not empty article.archive? 'checked' : '' } /> Is Archived
                 </sec:authorize>
                 <input type="hidden" name="id" value="${ article.id }">
                 <input type="hidden" name="${_csrf.parameterName}"

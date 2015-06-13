@@ -1,5 +1,7 @@
 package com.springapp.mvc.utils;
 
+import org.springframework.web.util.HtmlUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /**
@@ -43,6 +45,33 @@ public class StringUtils {
 	}
 	else return content;
 	return sb.toString();
+    }
+
+    public static String clearFromJavaScriptInjection(String string)
+    {
+	StringBuffer sb;
+	if (null != string && !checkIsEmpty(string))
+	{
+	    Pattern pattern = Pattern.compile("(<\\s*script.*>.*<\\s*/\\s*script\\s*>)", Pattern.CASE_INSENSITIVE);
+	    Matcher matcher = pattern.matcher(string);
+	    sb = new StringBuffer();
+	    while (matcher.find())
+	    {
+		String rez = matcher.group();
+		matcher.appendReplacement(sb, HtmlUtils.htmlEscape(rez));
+	    }
+	    matcher.appendTail(sb);
+	}
+	else
+	{
+	    return string;
+	}
+	return sb.toString();
+    }
+
+    public static String clearHTMLTags(String string)
+    {
+	return null!=string && !string.isEmpty()? HtmlUtils.htmlEscape(string, "utf8") : string;
     }
 
 }

@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="risingsun:war">
-    <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="risingsun.war">
-      <element id="artifact" artifact-name="risingsun:war exploded" />
-    </root>
-  </artifact>
-</component>

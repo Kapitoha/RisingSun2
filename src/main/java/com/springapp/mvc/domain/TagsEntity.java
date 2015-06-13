@@ -1,5 +1,7 @@
 package com.springapp.mvc.domain;
 
+import com.springapp.mvc.utils.StringUtils;
+
 import javax.persistence.*;
 
 import java.util.Collections;
@@ -43,11 +45,11 @@ public class TagsEntity implements BaseEntity {
 
 
     public String getName() {
-        return name;
+        return StringUtils.clearHTMLTags(name);
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = StringUtils.clearHTMLTags(name);
     }
 
     public Set<Article> getArticles()

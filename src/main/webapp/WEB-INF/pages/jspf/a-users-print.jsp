@@ -39,9 +39,9 @@
 									<c:forEach var="user" items="${ user_list }">
 									<tr class="odd gradeA">
 										<td>${ user.id }</td>
-										<td>${ user.name }</td>
-										<td>${ user.login }</td>
-										<td>${ user.status }</td>
+										<td>${ user.getName() }</td>
+										<td>${ user.getLogin() }</td>
+										<td>${ user.getStatus() }</td>
 										<td align="center" class="col-lg-1"><form action="admin-user-edit" method="post">
 											<input type="hidden" name="id" value="${ user.id }"> 
 											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />

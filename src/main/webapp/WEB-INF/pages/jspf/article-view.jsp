@@ -5,12 +5,13 @@
 	<c:set var="article" value="${ article_obj }" />
 	<div class="post-details">
 		<ul>
-			<li><i class="fa fa-user"> Author: </i><a href="search?author=${ article.author.id }" style="color: blue;">${ article.author.name }</a></li>
+			<li><i class="fa fa-user"> Author: </i><a href="search?author=${ article.getAuthor().getId() }"
+                                                      style="color: blue;">${ article.getAuthor().getName() }</a></li>
 			<li><i class="fa fa-calendar"> Date: </i><f:formatDate value="${ article.creationDate }" type="date"/></li>
 		</ul>
 	</div>
 	<div>
-		<h2 align="center" style="margin: 30px;">${ article.title }</h2>
+		<h2 align="center" style="margin: 30px;">${ article.getTitle() }</h2>
 		<p>${ article.getContentText() }</p>
 	</div>
 </div>
@@ -18,7 +19,7 @@
     <hr>
     <i class="fa fa-tag"> Tags</i>
     <c:forEach var="tag" items="${ article.getTagList() }">
-        <a class="label label-default" href="search?tag=${tag.name}" style="color: #fff;">${ tag.name }</a>
+        <a class="label label-default" href="search?tag=${tag.getName()}" style="color: #fff;">${ tag.getName() }</a>
     </c:forEach>
 </div>
 <div id="disqus_thread"></div>
