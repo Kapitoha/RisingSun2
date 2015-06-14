@@ -22,7 +22,7 @@ public class StringUtils {
     {
 	final Pattern pattern = Pattern.compile("^\\s*$");
 	Matcher match = pattern.matcher(string);
-	return string == null || match.find();
+	return null == string || match.find();
     }
     
     public static String highlightKeywords(String keyword, String content)
@@ -36,7 +36,7 @@ public class StringUtils {
 	    while (matcher.find())
 	    {
 		String rez = matcher.group();
-		if (rez.matches("(=\".*"+keyword+".*\")")) continue;
+		if (rez.matches("(=\".*" + keyword + ".*\")")) continue;
 		else
 		matcher.appendReplacement(sb,
 			"<span class=\"highlight\">" + rez + "</span>");
@@ -71,7 +71,7 @@ public class StringUtils {
 
     public static String clearHTMLTags(String string)
     {
-	return null!=string && !string.isEmpty()? HtmlUtils.htmlEscape(string, "utf8") : string;
+	return (null != string && !string.isEmpty())? HtmlUtils.htmlEscape(string, "utf8") : string;
     }
 
 }

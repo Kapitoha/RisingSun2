@@ -106,103 +106,40 @@ public class AdminController {
 	    HttpServletRequest request, RedirectAttributes attr)
     {
 	if (!isMatchesAccessRights(Right.EDIT_USER.toString()))
-	    return accessDenied();
-	UsersEntity userInstance = user;
-	Status status = Status.valueOf(request.getParameter("status"));
-	if (null == userInstance)
 	{
-	    userInstance = new UsersEntity();
+	    return accessDenied();
 	}
+	int action = 0;
+	UsersEntity userInstance = (null == user)? new UsersEntity() : user;
+	Status status = Status.valueOf(request.getParameter("status"));
 
 	/*
 	 * Check fields
 	 */
-	if (!StringUtils.checkIfAllowed(userInstance.getName()))
 	{
-	    request.setAttribute(
-		    "error_msg",
-		    String.format(
-			    "Allowed only <strong><em>%s</em></strong> characters in 'Name' field",
-			    StringUtils.FIELD_NAME_PATTERN));
-	    return editUser(userInstance, request);
-	}
-	if (!StringUtils.checkIfAllowed(userInstance.getLogin()))
-	{
-	    request.setAttribute(
-		    "error_msg",
-		    String.format(
-			    "Allowed only <strong><em>%s</em></strong> characters in 'login' field",
-			    StringUtils.FIELD_NAME_PATTERN));
-	    return editUser(userInstance, request);
-	}
-	// read access rights
-	Set<AccessRight> newAccessRightsList = new LinkedHashSet<>();
-	String[] accessRightsArray = request.getParameterValues("access_right");
-	if (null != accessRightsArray && accessRightsArray.length > 0)
-	{
-	    for (String rights : accessRightsArray)
+	    String userFieldCHeckMsg = checkUsersFields(userInstance);
+	    if (userFieldCHeckMsg != null)
 	    {
-		int right_id = 0;
-		try
-		{
-		    right_id = Integer.valueOf(rights);
-		    newAccessRightsList.add(accessManger.getAccessRightById(right_id));
-		}
-		catch (NumberFormatException ne)
-		{
-		    System.err.println("wrong id of rule: " + ne.getLocalizedMessage());
-		    continue;
-		}
+		request.setAttribute("error_msg", userFieldCHeckMsg);
+		return editUser(userInstance, request);
 	    }
 	}
-	// Rewrite access rights with new values
-	userInstance.getAccessList().clear();
-	userInstance.setAccessList(newAccessRightsList);
+	// read and manage user's access rights
+	manageUsersAccessRights(userInstance, request);
 
 	/*
 	 * Save / update actions
 	 */
 	String result_msg = null;
-	int action = 0;
-	List<UsersEntity> existedUsersList = userRepository
-		.getUsersByFields(userInstance);
-	if (null == existedUsersList || existedUsersList.isEmpty())
-	{
-	    // save
-	    action = SAVE;
-	}
+	Object userDuplicateCheckResult = checkIfUsersFieldsDuplicated(userInstance);
+	if (userDuplicateCheckResult instanceof Integer)
+	    action = (Integer) userDuplicateCheckResult;
 	else
 	{
-	    // check for duplicates
-	    for (UsersEntity existedUser : existedUsersList)
-	    {
-		if (existedUser.getName().equals(userInstance.getName())
-			&& existedUser.getId() != userInstance.getId())
-		{
-		    // same name
-		    request.setAttribute("error_msg",
-			    "This Name is already presented. Choose other please.");
-		    return editUser(userInstance, request);
-		}
-		if (existedUser.getLogin().equals(userInstance.getLogin())
-			&& existedUser.getId() != userInstance.getId())
-		{
-		    // same login
-		    request.setAttribute("error_msg",
-			    "This Login is already presented. Choose other please.");
-		    return editUser(userInstance, request);
-		}
-	    }
-	    if (userInstance.getId() == 0)
-	    {
-		action = SAVE;
-	    }
-	    else
-	    {
-		// update
-		action = UPDATE;
-	    }
+	    request.setAttribute("error_msg", userDuplicateCheckResult);
+	    return editUser(userInstance, request);
 	}
+
 	userInstance.setStatus(status);
 	switch (action)
 	{
@@ -226,11 +163,98 @@ public class AdminController {
 		break;
 
 	    default:
-		break;
+		request.setAttribute("error_msg", "Unknown User save error!!!");
+		return editUser(userInstance, request);
 	}
 	ModelAndView finalView = new ModelAndView("redirect:/admin");
 	attr.addFlashAttribute("info_msg", result_msg);
 	return finalView;
+    }
+
+    private String checkUsersFields(UsersEntity user)
+    {
+	String msg = String.format("Allowed only <strong><em>%s</em></strong> characters in '%s' field",
+			StringUtils.FIELD_NAME_PATTERN);
+	if (!StringUtils.checkIfAllowed(user.getName()))
+	{
+	    return String.format(msg, "Name");
+	}
+	if (!StringUtils.checkIfAllowed(user.getLogin()))
+	{
+	    return String.format(msg, "Login");
+	}
+	return null;
+    }
+    private void manageUsersAccessRights(UsersEntity user, HttpServletRequest request)
+    {
+	Set<AccessRight> newAccessRightsList = new LinkedHashSet<>();
+	String[] accessRightsArray = request.getParameterValues("access_right");
+	if (null != accessRightsArray && accessRightsArray.length > 0)
+	{
+	    for (String rights : accessRightsArray)
+	    {
+		int right_id = 0;
+		try
+		{
+		    right_id = Integer.valueOf(rights);
+		    newAccessRightsList.add(accessManger.getAccessRightById(right_id));
+		}
+		catch (NumberFormatException ne)
+		{
+		    System.err.println("wrong id of rule: " + ne.getLocalizedMessage());
+		    continue;
+		}
+	    }
+	}
+	// Rewrite access rights with new values
+	user.getAccessList().clear();
+	user.setAccessList(newAccessRightsList);
+    }
+    public Object checkIfUsersFieldsDuplicated(UsersEntity user)
+    {
+	Object action = null;
+	boolean hasErrors = false;
+	List<UsersEntity> existedUsersList = userRepository
+			.getUsersByFields(user);
+	if (null == existedUsersList || existedUsersList.isEmpty())
+	{
+	    // save
+	    action = SAVE;
+	}
+	else
+	{
+	    // check for duplicates
+	    for (UsersEntity existedUser : existedUsersList)
+	    {
+		if (existedUser.getName().equals(user.getName())
+				&& existedUser.getId() != user.getId())
+		{
+		    // same name
+		    action = "This Name is already presented. Choose other please.";
+		    hasErrors = true;
+		}
+		if (existedUser.getLogin().equals(user.getLogin())
+				&& existedUser.getId() != user.getId())
+		{
+		    // same login
+		    action = "This Login is already presented. Choose other please.";
+		    hasErrors = true;
+		}
+	    }
+	    if (!hasErrors)
+	    {
+		if (user.getId() == 0)
+		{
+		    action = SAVE;
+		}
+		else
+		{
+		    // update
+		    action = UPDATE;
+		}
+	    }
+	}
+	return action;
     }
 
     // ============================================================== Articles

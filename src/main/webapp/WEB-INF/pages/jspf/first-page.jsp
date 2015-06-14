@@ -10,7 +10,7 @@
 </header>
 <c:choose>
     <c:when test="${empty firstPages}">
-        <p>There are no articles</p>
+        <H2>There are no articles</H2>
     </c:when>
     <c:otherwise>
         <div id="page-content" class="center-text">
