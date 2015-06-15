@@ -62,7 +62,7 @@ public class Article implements BaseEntity {
 
     public String getTitle()
     {
-	return StringUtils.clearHTMLTags(title);
+	return StringUtils.clearFromJavaScriptInjection(title);
     }
 
     public void setTitle(String title)

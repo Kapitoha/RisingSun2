@@ -38,7 +38,7 @@
         <div class="row" id="news">
             <c:forEach var="page" items="${firstPages}">
                 <c:set var="article" value="${ page.article }"/>
-                    <div class="thumbnail col-lg-3" id="news-item"
+                    <div class="thumbnail col-lg-3 col-md-3 col-sm-3 col-xs-3" id="news-item"
                          style="background-color: #EEE6FA; ${page.featured?'border: 2px solid red' : ''}">
                         <img id="ico" alt="" src="${article.getImageUrl() }" onclick="invoke('article-view?id=${article.id}');"
                              style="cursor: pointer;">

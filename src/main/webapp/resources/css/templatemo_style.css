@@ -528,9 +528,10 @@ address {
 	padding: 5px;
 	margin: 5px;
 	height: 400px;
-	max-width: 280px;
+	width: 280px;
 	max-height: 400px;
 	overflow: auto;
+	box-shadow: 5px 10px 10px -5px rgba(0, 0, 0, 0.5);
 }
 .highlight {
 	background-color: yellow;
