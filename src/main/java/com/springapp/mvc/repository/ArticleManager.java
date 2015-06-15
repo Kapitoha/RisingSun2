@@ -22,10 +22,15 @@ public class ArticleManager {
     @Autowired
     private DAOManager daomanager;
     private TagManager tagManager;
+    private FirstPageManager firstPageManager;
 
     public TagManager getTagsManager()
     {
 	return null == tagManager ? new ArticleManager.TagManager() : tagManager;
+    }
+    public FirstPageManager getFirstPageManager()
+    {
+	return (null == firstPageManager)? new ArticleManager.FirstPageManager() : firstPageManager;
     }
 
     public List<Article> getArticles()
@@ -66,43 +71,9 @@ public class ArticleManager {
 	return (fpList != null && !fpList.isEmpty()) ? fpList.get(0) : null;
     }
 
-    /**
-     * Deletes article using SQL query from First page even if CascadeType.ALL
-     * is presents
-     * 
-     * @param article
-     */
-    public void removeArticleFromFirstPageDirectly(Article article)
-    {
-	if (null != article)
-	{
-	    daomanager.executeHQLQuery(String.format(
-		    "DELETE FROM %s WHERE article_id = :id",
-		    FirstPage.class.getSimpleName()), article.getId());
-	}
-	else
-	{
-	    System.err.println("article == null");
-	}
-    }
 
-    public boolean updateFirstPage(FirstPage firstPage)
-    {
-	return daomanager.updateInstance(firstPage);
-    }
 
-    /**
-     * Deletes article using SQL query from archive even if CascadeType.ALL is
-     * presents
-     * 
-     * @param article
-     */
-    public void deleteFromArchiveDirectly(Article article)
-    {
-	daomanager.executeHQLQuery(
-		String.format("DELETE FROM %s arc WHERE arc.articleId = ?",
-			Archive.class.getSimpleName()), article.getId());
-    }
+
 
     public Collection<Article> getArchivedArticles()
     {
@@ -208,7 +179,20 @@ public class ArticleManager {
 	return articleList;
     }
 
+    /**
+     * Deletes article using SQL query from archive even if CascadeType.ALL is
+     * presents
+     *
+     * @param article
+     */
+    public void deleteFromArchiveDirectly(Article article)
+    {
+	daomanager.executeHQLQuery(
+			String.format("DELETE FROM %s arc WHERE arc.articleId = ?",
+					Archive.class.getSimpleName()), article.getId());
+    }
     public class TagManager {
+
 	public TagsEntity getTag(String tagName)
 	{
 	    List<TagsEntity> list = daomanager.getInstanceList(TagsEntity.class,
@@ -253,7 +237,6 @@ public class ArticleManager {
 			    "DELETE FROM article_tags a WHERE a.article_id = :article_id AND a.tag_id = :tag_id",
 			    article.getId(), tag.getId());
 	}
-
 	public Set<TagsEntity> parseTagsFromString(String string)
 	{
 	    HashSet<TagsEntity> set = new HashSet<>();
@@ -274,6 +257,34 @@ public class ArticleManager {
 		}
 	    }
 	    return set;
+	}
+
+    }
+    public class FirstPageManager {
+
+	/**
+	 * Deletes article using SQL query from First page even if CascadeType.ALL
+	 * is presents
+	 *
+	 * @param article
+	 */
+	public void removeArticleFromFirstPageDirectly(Article article)
+	{
+	    if (null != article)
+	    {
+		daomanager.executeHQLQuery(String.format(
+				"DELETE FROM %s WHERE article_id = :id",
+				FirstPage.class.getSimpleName()), article.getId());
+	    }
+	    else
+	    {
+		System.err.println("article == null");
+	    }
+	}
+
+	public boolean updateFirstPage(FirstPage firstPage)
+	{
+	    return daomanager.updateInstance(firstPage);
 	}
     }
 

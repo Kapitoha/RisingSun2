@@ -391,7 +391,7 @@ public class AdminController {
 	    {
 		if (article.getFirstPage() != null)
 		{
-		    articleManager.removeArticleFromFirstPageDirectly(article);
+		    articleManager.getFirstPageManager().removeArticleFromFirstPageDirectly(article);
 		    article.setFirstPage(null);
 		}
 	    }
@@ -453,7 +453,7 @@ public class AdminController {
 	    for (int i = 0; i < firstPageList.size(); i++)
 	    {
 		firstPageList.get(i).setShow_order(i + 1);
-		articleManager.updateFirstPage(firstPageList.get(i));
+		articleManager.getFirstPageManager().updateFirstPage(firstPageList.get(i));
 	    }
 	}
 	attributes.addFlashAttribute("info_msg", msg);
