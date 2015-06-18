@@ -7,11 +7,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="coll" uri="/WEB-INF/tag/collection_utils.tld"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
 <html lang="en">
 <!-- Import head -->
-<c:import url="jspf/admin-head.jsp"></c:import>
+<%@include file="jspf/admin-head.jsp"%>
+<sec:authentication var="principalname" property="name"/>
+
 
 <body>
 
@@ -27,19 +30,19 @@
 			<c:set var="p_tag" value="${ page_tag }" />
 			<c:choose>
 				<c:when test="${p_tag eq 'users_show'}">
-					<c:import url="jspf/a-users-print.jsp" />
+					<%@include file="jspf/a-users-print.jsp" %>
 				</c:when>
 				<c:when test="${p_tag eq 'user-edit'}">
-					<c:import url="jspf/a-user-edit.jsp" />
+					<%@include file="jspf/a-user-edit.jsp" %>
 				</c:when>
 				<c:when test="${p_tag eq 'articles_print'}">
-					<c:import url="jspf/a-article-print.jsp" />
+					<%@include file="jspf/a-article-print.jsp" %>
 				</c:when>
 				<c:when test="${p_tag eq 'articles_edit'}">
-					<c:import url="jspf/a-article-edit.jsp" />
+					<%@include file="jspf/a-article-edit.jsp" %>
 				</c:when>
 				<c:when test="${p_tag eq 'article_view'}">
-					<c:import url="jspf/a-article-view.jsp" />
+					<%@include file="jspf/a-article-view.jsp" %>
 				</c:when>
 			</c:choose>
 		</div>

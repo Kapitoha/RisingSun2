@@ -22,7 +22,10 @@
                             <div id="face">
                                 <img src="${ article.getImageUrl() }" alt="">
 
-                                <h3>${article.getTitle()}</h3>
+                                <h3 style="color: ${article.getTitleColor()}; 
+                                font-size: ${article.getTitleFontSize()}px;">
+                                	${article.getTitle()}
+                                </h3>
                             </div>
                             <div class="detail"
                                  onclick="invoke('article-view?id=${article.id}');"

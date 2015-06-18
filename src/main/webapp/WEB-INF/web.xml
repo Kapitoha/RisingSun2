@@ -12,6 +12,18 @@
 		<location>/accessdenied</location>
 	</error-page>
 
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404</location>
+	</error-page>
+	<error-page>
+	    <exception-type>com.springapp.mvc.utils.ExceptionInvoker.PageNotFoundException</exception-type>
+	    <location>/404</location>
+	</error-page>
+	<error-page>
+	    <exception-type>com.springapp.mvc.utils.ExceptionInvoker.AccessDeniedException</exception-type>
+	    <location>/404</location>
+	</error-page>
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>

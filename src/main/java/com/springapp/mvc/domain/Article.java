@@ -4,6 +4,7 @@ import com.springapp.mvc.repository.ArticleManager;
 import com.springapp.mvc.utils.StringUtils;
 
 import javax.persistence.*;
+
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -49,6 +50,10 @@ public class Article implements BaseEntity {
 
     @Column(name="image_url")
     private String imageUrl;
+    @Column(length=5, columnDefinition="INTEGER default 40")
+    private Integer titleFontSize;
+    @Column(columnDefinition="varchar(8) default '#000000'")
+    private String titleColor;
 
     public int getId()
     {
@@ -205,6 +210,26 @@ public class Article implements BaseEntity {
     public void setImageUrl(String imageUrl)
     {
 	this.imageUrl = StringUtils.clearHTMLTags(imageUrl);;
+    }
+
+    public int getTitleFontSize()
+    {
+        return (titleFontSize == null || titleFontSize <= 0)? 40 : titleFontSize;
+    }
+
+    public void setTitleFontSize(int titleFontSize)
+    {
+        this.titleFontSize = titleFontSize;
+    }
+
+    public String getTitleColor()
+    {
+        return null == titleColor? "#000000" : titleColor;
+    }
+
+    public void setTitleColor(String titleColor)
+    {
+        this.titleColor = titleColor == null || titleColor.isEmpty()? "#000000" : titleColor;
     }
 
     @Override

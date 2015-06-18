@@ -73,5 +73,18 @@ public class StringUtils {
     {
 	return (null != string && !string.isEmpty())? HtmlUtils.htmlEscape(string, "utf8") : string;
     }
+    
+    public static int parseInt(String string, int defaultValue)
+    {
+	int rez = defaultValue;
+	try
+	{
+	    rez = Integer.parseInt(string);
+	}
+	catch (NumberFormatException e)
+	{
+	}
+	return rez;
+    }
 
 }

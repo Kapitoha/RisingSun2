@@ -7,27 +7,27 @@
 
 <html lang="ru">
 <head>
-    <c:import url="jspf/head.jsp"/>
+    <%@include file="jspf/head.jsp"%>
 </head>
 <body>
 <div class="main-container">
     <!-- Import navbar -->
-    <c:import url="jspf/navbar.jsp" charEncoding="utf8" />
+    <%@include file="jspf/navbar.jsp"%>
 
     <!-- main content -->
     <div class="content-container page-wrapper">
         <c:choose>
             <c:when test="${ page_tag eq 'first_page' }">
-                <c:import url="jspf/first-page.jsp" />
+                <%@include file="jspf/first-page.jsp"%>
             </c:when>
             <c:when test="${ page_tag eq 'archive' }">
-                <c:import url="jspf/search.jsp" />
+                <%@include file="jspf/search.jsp" %>
             </c:when>
             <c:when test="${ page_tag eq 'article_view' }">
-                <c:import url="jspf/article-view.jsp" />
+                <%@include file="jspf/article-view.jsp" %>
             </c:when>
             <c:when test="${ page_tag eq 'search' }">
-                <c:import url="jspf/search.jsp" />
+                <%@include file="jspf/search.jsp" %>
             </c:when>
         </c:choose>
     </div>

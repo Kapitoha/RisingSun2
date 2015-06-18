@@ -34,3 +34,15 @@ $(function() {
         element.addClass('active');
     }
 });
+
+function uncheck(target) {
+	var elem = document.getElementById(target);
+	if (elem.checked)
+		elem.checked=false;
+}
+
+function check(target) {
+	var elem = document.getElementById(target);
+	if (!elem.checked)
+		elem.checked=true;
+}

@@ -360,3 +360,6 @@ table.dataTable thead .sorting:after {
 	color: red;
 	font-size: 24px;
 }
+.article-action {
+	margin: 10px;
+}

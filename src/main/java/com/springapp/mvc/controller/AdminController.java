@@ -329,7 +329,8 @@ public class AdminController {
 	    }
 
 	}
-	articleManager.getTagsManager().removeAllArticleTagsDirectly(article);
+	if (article.getTagList() != null || !article.getTagList().isEmpty())
+	    articleManager.getTagsManager().removeAllArticleTagsDirectly(article);
 	article.getTagList().clear();
 	if (articleManager.deleteArticle(article))
 	{
@@ -351,6 +352,8 @@ public class AdminController {
 	boolean isArchived = request.getParameter("archived") != null;
 	boolean isOnFirstPage = request.getParameter("show_main") != null && !isArchived;
 	boolean isFeatured = request.getParameter("featured") != null;
+	String titleColor = request.getParameter("title_color");
+	int fontSize = Integer.valueOf(request.getParameter("title_font_size"));
 	int position = Integer.valueOf(request.getParameter("position"));
 	String tags = request.getParameter("tags");
 	Article article = articleInstance.getId() > 0 ? articleManager
@@ -385,6 +388,9 @@ public class AdminController {
 		}
 		firstPageList.add(position - 1, article.getFirstPage());
 		article.getFirstPage().setFeatured(isFeatured);
+		
+		article.setTitleColor(titleColor == null || titleColor.isEmpty()? "#000000" : titleColor);
+		article.setTitleFontSize(StringUtils.parseInt(String.valueOf(fontSize), 40));
 		
 	    }
 	    else
@@ -547,6 +553,14 @@ public class AdminController {
 //	view.addObject("page_tag", "denied");
 //	view.addObject("error_msg", "Access Denied!!!");
 	return new ModelAndView("/accessdenied");
+    }
+    
+    @RequestMapping(value = "404")
+    public ModelAndView notfound()
+    {
+	ModelAndView view = new ModelAndView("/404");
+	
+	return view;
     }
 
 }

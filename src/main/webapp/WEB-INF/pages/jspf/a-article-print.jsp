@@ -6,6 +6,7 @@
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="coll" uri="/WEB-INF/tag/collection_utils.tld" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <c:set var="art_list" value="${ articles_list }"/>
 
@@ -36,8 +37,9 @@
                                     <th class="col-lg-1" id="a_author">Author</th>
                                     <th class="col-lg-1" id="a_date">Date</th>
                                     <th class="col-lg-0" id="a_F" title="Is placed on the first page">Main</th>
-                                    <th class="col-lg-0" title="Position on the first page">Pos</th>
-                                    <th class="col-lg-0" id="a_A" title="Is archived">A</th>
+                                    <th class="col-lg-0" title="Position on the first page">Pos.</th>
+                                    <th class="col-lg-0" title="Is featured">Featured</th>
+                                    <th class="col-lg-0" id="a_A" title="Is archived">Archived</th>
                                     <th class="col-lg-0" id="a_view"></th>
                                 </tr>
                                 </thead>
@@ -63,6 +65,12 @@
                                         <td align="center" title="Position on the first page"><c:out
                                                 value="${ not empty article.getFirstPage()? article.getFirstPage().show_order : ''
 												 }"></c:out></td>
+										<td align="center" title="Is featured">
+											<p align="center"
+                                               style="${ article.getFirstPage().isFeatured()? 'background-color: #a2c044':'' }">${ not
+                                                    empty
+                                                            article.getFirstPage() }</p>
+										</td>
                                         <td align="center" title="Is archived">
                                             <p align="center"
                                                style="${ not empty article.archive? 'background-color: #a2c044':'' }">${
@@ -71,11 +79,30 @@
                                                             article.archive }</p>
                                         </td>
                                         <td align="center" class="center">
-                                            <form action="admin-article-view">
+                                            <form id="form-fiew-${ article.getId() }" action="admin-article-view">
                                                 <input type="hidden" name="id" value="${ article.id }">
                                                     <%-- 											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> --%>
-                                                <input type="submit" value="View">
                                             </form>
+                                            <form id="form-edit-${ article.getId() }" action="admin-article-edit" method="post">
+                                            	<input type="hidden" name="id" value="${ article.id }">
+                                            	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                            </form>
+                                                <button form="form-fiew-${ article.getId() }" class="btn btn-info fa fa-eye" type="submit" 
+                                                	title="View article" style="margin: 1px;">
+                                                </button>
+                                                <sec:authorize access="hasAnyAuthority('EDIT_ARTICLE_MASTER', 'EDIT_ARTICLE_AUTHOR') ">
+                                                	<sec:authorize var="author_edit" access="hasAuthority('EDIT_ARTICLE_AUTHOR')"/>
+                                                	<sec:authorize var="master_edit" access="hasAuthority('EDIT_ARTICLE_MASTER')"/>
+                                                	<sec:authentication property="name" var="principalname"/>
+                                                	<c:if test="${ master_edit or (author_edit and (principalname eq article.author.login)) }">
+		                                                <button form="form-edit-${ article.getId() }" 
+			                                                type="button" class="btn btn-warning fa fa-edit" 
+			                                                onclick="document.forms['form-edit-${ article.getId() }'].submit();" 
+			                                                style="margin: 1px;"
+			                                                title="Edit article">
+		                                                </button>
+                                                	</c:if>
+                                                </sec:authorize>
                                         </td>
                                     </tr>
                                 </c:forEach>

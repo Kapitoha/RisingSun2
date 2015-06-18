@@ -6,7 +6,7 @@
 <div>
     <c:choose>
         <c:when test="${ empty result_list }">
-            <p>Empty</p>
+            <p align="center">Not found anything :(</p>
         </c:when>
         <c:otherwise>
             <%
@@ -16,6 +16,30 @@
                 Integer pages_count = Double.valueOf(list_size / resultsPerPage + 1).intValue();
             %>
 
+            <c:if test="${ page_tag != 'archive' }">
+            	<div id="info_panel" class="col-lg-12" style="margin-bottom: 20px;">
+                    <div class="panel panel-info">
+                        <div align="center" class="panel-heading">
+                            <h2 style="margin: 0; font-weight: bold;">Search result</h2>
+                        </div>
+                        <div class="panel-body">
+                            <h3 align="center">Were found <strong>${ result_list.size() }</strong> matches </h3>
+                            <c:if test="${ not empty relative_tags }">
+                            	<p>
+                            		With <a class="label label-info" href="search?tag=${goal_tag.getName()}"
+                                               style="color: #fff;">${ goal_tag.getName() }</a> tag often occur:
+                            		<c:forEach var="tag" items="${ relative_tags }">
+                                            <a class="label label-default" href="search?tag=${tag.getName()}"
+                                               style="color: #fff;">${ tag.getName() }</a>
+                                    </c:forEach>
+                            	</p>	
+                            </c:if>
+                            <p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
             <div>
                 <c:forEach var="page_num" begin="1" end='<%=pages_count%>'>
                     <div class="portfolio-page" id="page-${ page_num }"

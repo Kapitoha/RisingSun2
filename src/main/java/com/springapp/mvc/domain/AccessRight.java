@@ -11,6 +11,10 @@ import javax.persistence.*;
 @Entity
 @Table(name="access_rights")
 public class AccessRight implements BaseEntity {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue
     @Column(nullable=false, unique= true, length=11)

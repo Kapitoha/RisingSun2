@@ -28,7 +28,9 @@
                                     <a href="admin-articles-print">Print Articles</a>
                                 </li>
                                 <li>
-                                    <a href="admin-article-create">Create Article</a>
+                                	<sec:authorize access="hasAuthority('CREATE_ARTICLE')">
+	                                    <a href="admin-article-create">Create Article</a>
+                                	</sec:authorize>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
